@@ -22,7 +22,7 @@ int imageFromFile()
 {
     printf("begin");
     int width,height,n;
-    imagePtr *data = stbi_load("../../image.bmp",&width,&height,&n,0);
+    imagePtr *data = stbi_load("image.bmp",&width,&height,&n,0);
     struct pixel image[width][height];
     if(data == NULL)
     {
@@ -33,8 +33,16 @@ int imageFromFile()
 
     int x, y;
     int i,j;
-    for(x = 0, i = 0; x < sizeof(data) + x*y*n; x += y*n*sizeof(*data), i++)
+
+    for(i = 0, x = 0, y = 0; i < width*height*n; i++)
     {
+        printf("%i\n",data[i]);
+    }
+    /*
+
+    for(x = 0, i = 0; x < sizeof(*data)*x*y*n; x += y*n*sizeof(*data), i++,x++)
+    {
+        printf("%i",i);
         for(y = x,j = 0; y < x; y += n*sizeof(*data),j++)
         {
             int r,g,b;
@@ -47,7 +55,7 @@ int imageFromFile()
             printf("{%i %i %i}", image[i][j].red,image[i][j].green,image[i][j].blue);
         }
         printf("\n");
-    }
+    }*/
     printf("success");
     return 1;
 }
