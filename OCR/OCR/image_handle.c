@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-//#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.c"
 #define string char[]
 
@@ -18,11 +18,11 @@ struct pixel
     char blue;
 };
 // Loads image from url
-/*int imageFromFile()
+int imageFromFile()
 {
     printf("begin");
     int width,height,n;
-    imagePtr *data = stbi_load("image.jpg",&width,&height,&n,0);
+    imagePtr *data = stbi_load("image.bmp",&width,&height,&n,0);
     struct pixel image[width][height];
     if(data == NULL)
     {
@@ -51,4 +51,3 @@ struct pixel
     printf("success");
     return 1;
 }
-*/

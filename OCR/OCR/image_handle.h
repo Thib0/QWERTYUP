@@ -1,0 +1,2 @@
+int imageFromFile();
+struct pixel;
