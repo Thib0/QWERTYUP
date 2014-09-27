@@ -5,7 +5,7 @@
 
 int main (int argc, char *argv[])
 {
-  setWindow(argc, argv);
+  //setWindow(argc, argv);
   imageFromFile();
   return 0;
 }

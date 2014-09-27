@@ -22,7 +22,7 @@ int imageFromFile()
 {
     printf("begin");
     int width,height,n;
-    imagePtr *data = stbi_load("image.bmp",&width,&height,&n,0);
+    imagePtr *data = stbi_load("../../image.bmp",&width,&height,&n,0);
     struct pixel image[width][height];
     if(data == NULL)
     {
