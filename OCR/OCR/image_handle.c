@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb/stb_image.c"
+#include "stb/stb_image.h"
+#include "stb/stb_image_write.h"
 #define string char[]
 
 /*
@@ -13,17 +14,17 @@ typedef  unsigned char imagePtr;
 
 struct pixel
 {
-    char red;
-    char green;
-    char blue;
+    unsigned char red;
+    unsigned char green;
+    unsigned char blue;
 };
 // Loads image from url
-int imageFromFile()
+int imageFromFile(const char file[], int *width, int *heigth)
 {
-    printf("begin");
-    int width,height,n;
-    imagePtr *data = stbi_load("image.bmp",&width,&height,&n,0);
-    struct pixel image[width][height];
+    int n;
+    imagePtr *data = stbi_load(file,width,heigth,&n,3);
+    struct pixel image[(*width)*(*heigth)];
+    printf("%i",data);
     if(data == NULL)
     {
         printf("Failure");
@@ -33,10 +34,14 @@ int imageFromFile()
 
     int x, y;
     int i,j;
+    printf("%u\n",n);
 
-    for(i = 0, x = 0, y = 0; i < width*height*n; i++)
+    for(i = 0; i < (*width)*(*heigth); i+=3)
     {
-        printf("%i\n",data[i]);
+        image[i].red = data[i];
+        image[i].green = data[i+1];
+        image[i].blue = data[i+2];
+        printf("{%i,%i,%i}\n",image[i].red,image[i].green,image[i].blue);
     }
     /*
 
@@ -57,5 +62,6 @@ int imageFromFile()
         printf("\n");
     }*/
     printf("success");
+    stbi_image_free(data);
     return 1;
 }

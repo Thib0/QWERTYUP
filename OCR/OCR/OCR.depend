@@ -2424,7 +2424,7 @@
 
 1411826186 /home/tibo/QWERYUP/OCR/OCR/gtk.h
 
-1411838354 source:/home/moray/QWERYUP/OCR/OCR/main.c
+1411847035 source:/home/moray/QWERYUP/OCR/OCR/main.c
 	<stdlib.h>
 	<gtk/gtk.h>
 	"gtk.h"
@@ -2436,12 +2436,13 @@
 	<stdlib.h>
 	<gtk/gtk.h>
 
-1411838354 source:/home/moray/QWERYUP/OCR/OCR/image_handle.c
+1411846990 source:/home/moray/QWERYUP/OCR/OCR/image_handle.c
 	<stdio.h>
 	<stdlib.h>
-	"stb/stb_image.c"
+	"stb/stb_image.h"
+	"stb/stb_image_write.h"
 
-1410372229 /home/moray/QWERYUP/OCR/OCR/stb/stb_image.h
+1411838354 /home/moray/QWERYUP/OCR/OCR/stb/stb_image.h
 	<stdio.h>
 	<math.h>
 	<string.h>
@@ -2475,4 +2476,11 @@
 	<gtk/gtk.h>
 
 1411838354 /home/moray/QWERYUP/OCR/OCR/image_handle.h
+
+1411838354 /home/moray/QWERYUP/OCR/OCR/stb/stb_image_write.h
+	<stdarg.h>
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<assert.h>
 
