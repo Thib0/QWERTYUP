@@ -35,7 +35,13 @@
 		<Linker>
 			<Add option="`pkg-config gtk+-2.0 --libs`" />
 		</Linker>
-		<Unit filename="image_handle" />
+		<Unit filename="gtk.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="gtk.h" />
+		<Unit filename="image_handle.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

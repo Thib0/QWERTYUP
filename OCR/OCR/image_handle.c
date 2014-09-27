@@ -1,9 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb/stb_image.h"
+//#define STB_IMAGE_IMPLEMENTATION
+#include "stb/stb_image.c"
+#define string char[]
 
+/*
+    File Content :
+    Structs/function for image handling
+*/
 typedef  unsigned char imagePtr;
+//typedef  char[] string;
 
 struct pixel
 {
@@ -11,8 +17,8 @@ struct pixel
     char green;
     char blue;
 };
-
-int imageFromFile()
+// Loads image from url
+/*int imageFromFile()
 {
     printf("begin");
     int width,height,n;
@@ -45,3 +51,4 @@ int imageFromFile()
     printf("success");
     return 1;
 }
+*/
