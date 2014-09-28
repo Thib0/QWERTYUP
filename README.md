@@ -1,4 +1,4 @@
-QWERYUP
+QWERTYUP
 =======
 
 OCR PROJECT
