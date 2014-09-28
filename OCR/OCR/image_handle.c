@@ -43,24 +43,7 @@ int imageFromFile(const char file[], int *width, int *heigth)
         image[i].blue = data[i+2];
         printf("{%i,%i,%i}\n",image[i].red,image[i].green,image[i].blue);
     }
-    /*
 
-    for(x = 0, i = 0; x < sizeof(*data)*x*y*n; x += y*n*sizeof(*data), i++,x++)
-    {
-        printf("%i",i);
-        for(y = x,j = 0; y < x; y += n*sizeof(*data),j++)
-        {
-            int r,g,b;
-            r = data[x+y];
-            g = data[x+y+8];
-            b = data[x+y+16];
-            image[i][j].red = r;
-            image[i][j].green = g;
-            image[i][j].blue = b;
-            printf("{%i %i %i}", image[i][j].red,image[i][j].green,image[i][j].blue);
-        }
-        printf("\n");
-    }*/
     printf("success");
     stbi_image_free(data);
     return 1;

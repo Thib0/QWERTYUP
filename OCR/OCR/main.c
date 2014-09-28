@@ -6,6 +6,7 @@
 int main (int argc, char *argv[])
 {
   //setWindow(argc, argv);
-  imageFromFile();
+  int x, y;
+  imageFromFile("lol.jpg",&x,&y);
   return 0;
 }
