@@ -12,19 +12,18 @@
 typedef  unsigned char imagePtr;
 //typedef  char[] string;
 
-struct pixel
+typedef struct pixel
 {
     unsigned char red;
     unsigned char green;
     unsigned char blue;
-};
+}pixel;
 // Loads image from url
 int imageFromFile(const char file[], int *width, int *heigth)
 {
     int n;
     imagePtr *data = stbi_load(file,width,heigth,&n,3);
     struct pixel image[(*width)*(*heigth)];
-    printf("%i",data);
     if(data == NULL)
     {
         printf("Failure");
@@ -36,15 +35,18 @@ int imageFromFile(const char file[], int *width, int *heigth)
     int i,j;
     printf("%u\n",n);
 
-    for(i = 0; i < (*width)*(*heigth); i+=3)
+    for(i = 0; i < (*width)*(*heigth)*3; i+=3)
     {
-        image[i].red = data[i];
-        image[i].green = data[i+1];
-        image[i].blue = data[i+2];
-        printf("{%i,%i,%i}\n",image[i].red,image[i].green,image[i].blue);
+        image[i/3].red = data[i];
+        image[i/3].green = data[i+1];
+        image[i/3].blue = data[i+2];
+    }
+    for(i = 0; i < (*width)*(*heigth); i++)
+    {
+        printf("%i - {%i,%i,%i}\n", i, image[i].red,image[i].green,image[i].blue);
     }
 
-    printf("success");
+    printf("success - %i",(*width)*(*heigth));
     stbi_image_free(data);
     return 1;
 }

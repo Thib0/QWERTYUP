@@ -8,12 +8,12 @@
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="image_handle.c" open="1" top="0" tabpos="2">
-		<Cursor position="343" topLine="2" />
+		<Cursor position="395" topLine="10" />
 	</File>
 	<File name="image_handle.h" open="1" top="0" tabpos="5">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="117" topLine="0" />
 	</File>
 	<File name="main.c" open="1" top="1" tabpos="1">
-		<Cursor position="241" topLine="0" />
+		<Cursor position="210" topLine="0" />
 	</File>
 </CodeBlocks_layout_file>

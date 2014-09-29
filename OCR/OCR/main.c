@@ -3,10 +3,11 @@
 #include "gtk.h"
 #include "image_handle.h"
 
+
 int main (int argc, char *argv[])
 {
   //setWindow(argc, argv);
   int x, y;
-  imageFromFile("lol.jpg",&x,&y);
+  imageFromFile("image.bmp", &x, &y);
   return 0;
 }
