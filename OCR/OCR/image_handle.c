@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb/stb_image_write.h"
 #define string char[]
 
@@ -37,9 +38,12 @@ int imageFromFile(const char file[], int *width, int *heigth)
 
     for(i = 0; i < (*width)*(*heigth)*3; i+=3)
     {
-        image[i/3].red = data[i];
-        image[i/3].green = data[i+1];
-        image[i/3].blue = data[i+2];
+        image[i/3].red = data[i]*0.3;
+        image[i/3].green = data[i+1]*0.59;
+        image[i/3].blue = data[i+2]*0.11;
+        data[i] = 0;
+        data[i+1] = 0;
+        data [i+2] = 0;
     }
     for(i = 0; i < (*width)*(*heigth); i++)
     {
@@ -47,6 +51,8 @@ int imageFromFile(const char file[], int *width, int *heigth)
     }
 
     printf("success - %i",(*width)*(*heigth));
+    char chemin[] = "test.bmp";
+    stbi_write_bmp(&chemin[0], *width, *heigth, 3, data);
     stbi_image_free(data);
     return 1;
 }

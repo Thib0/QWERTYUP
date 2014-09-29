@@ -1,8 +1,9 @@
 # depslib dependency file v1.0
-1411826159 source:/home/tibo/QWERYUP/OCR/OCR/main.c
+1412009022 source:/home/tibo/QWERYUP/OCR/OCR/main.c
 	<stdlib.h>
 	<gtk/gtk.h>
 	"gtk.h"
+	"image_handle.h"
 
 1396028418 /usr/include/gtk-2.0/gtk/gtk.h
 	<gdk/gdk.h>
@@ -1569,7 +1570,7 @@
 1396028418 /usr/include/gtk-2.0/gtk/gtkrc.h
 	<gtk/gtkstyle.h>
 
-1332915124 /usr/include/atk-1.0/atk/atk.h
+1376989194 /usr/include/atk-1.0/atk/atk.h
 	<atk/atkobject.h>
 	<atk/atkaction.h>
 	<atk/atkcomponent.h>
@@ -1600,105 +1601,105 @@
 	<atk/atkvalue.h>
 	<atk/atkwindow.h>
 
-1332915124 /usr/include/atk-1.0/atk/atkobject.h
+1376989194 /usr/include/atk-1.0/atk/atkobject.h
 	<glib-object.h>
 	<atk/atkstate.h>
 	<atk/atkrelationtype.h>
 
-1332915124 /usr/include/atk-1.0/atk/atkstate.h
+1376989194 /usr/include/atk-1.0/atk/atkstate.h
 	<glib-object.h>
 
-1332915124 /usr/include/atk-1.0/atk/atkrelationtype.h
+1376989194 /usr/include/atk-1.0/atk/atkrelationtype.h
 	<glib.h>
 
-1332915124 /usr/include/atk-1.0/atk/atkaction.h
+1376989194 /usr/include/atk-1.0/atk/atkaction.h
 	<atk/atkobject.h>
 
-1332915124 /usr/include/atk-1.0/atk/atkcomponent.h
-	<atk/atkobject.h>
-	<atk/atkutil.h>
-
-1332915124 /usr/include/atk-1.0/atk/atkutil.h
-	<atk/atkobject.h>
-
-1332915124 /usr/include/atk-1.0/atk/atkdocument.h
+1376989194 /usr/include/atk-1.0/atk/atkcomponent.h
 	<atk/atkobject.h>
 	<atk/atkutil.h>
 
-1332915124 /usr/include/atk-1.0/atk/atkeditabletext.h
+1376989194 /usr/include/atk-1.0/atk/atkutil.h
+	<atk/atkobject.h>
+
+1376989194 /usr/include/atk-1.0/atk/atkdocument.h
+	<atk/atkobject.h>
+	<atk/atkutil.h>
+
+1376989194 /usr/include/atk-1.0/atk/atkeditabletext.h
 	<atk/atkobject.h>
 	<atk/atktext.h>
 
-1332915124 /usr/include/atk-1.0/atk/atktext.h
+1376989194 /usr/include/atk-1.0/atk/atktext.h
 	<glib-object.h>
 	<atk/atkobject.h>
 	<atk/atkutil.h>
 
-1332915124 /usr/include/atk-1.0/atk/atkgobjectaccessible.h
+1376989194 /usr/include/atk-1.0/atk/atkgobjectaccessible.h
 	<atk/atk.h>
 
-1332915124 /usr/include/atk-1.0/atk/atkhyperlink.h
+1376989194 /usr/include/atk-1.0/atk/atkhyperlink.h
 	<atk/atkaction.h>
 
-1332915124 /usr/include/atk-1.0/atk/atkhyperlinkimpl.h
+1376989194 /usr/include/atk-1.0/atk/atkhyperlinkimpl.h
 	<atk/atkobject.h>
 	<atk/atkhyperlink.h>
 
-1332915124 /usr/include/atk-1.0/atk/atkhypertext.h
+1376989194 /usr/include/atk-1.0/atk/atkhypertext.h
 	<atk/atkobject.h>
 	<atk/atkhyperlink.h>
 
-1332915124 /usr/include/atk-1.0/atk/atkimage.h
+1376989194 /usr/include/atk-1.0/atk/atkimage.h
 	<atk/atkobject.h>
 	<atk/atkutil.h>
 
-1332915124 /usr/include/atk-1.0/atk/atknoopobject.h
+1376989194 /usr/include/atk-1.0/atk/atknoopobject.h
 
-1332915124 /usr/include/atk-1.0/atk/atknoopobjectfactory.h
+1376989194 /usr/include/atk-1.0/atk/atknoopobjectfactory.h
 	<atk/atkobjectfactory.h>
 
-1332915124 /usr/include/atk-1.0/atk/atkobjectfactory.h
+1376989194 /usr/include/atk-1.0/atk/atkobjectfactory.h
 	<glib-object.h>
 	<atk/atkobject.h>
 
-1332915124 /usr/include/atk-1.0/atk/atkplug.h
+1376989194 /usr/include/atk-1.0/atk/atkplug.h
 
-1332915124 /usr/include/atk-1.0/atk/atkregistry.h
+1376989194 /usr/include/atk-1.0/atk/atkregistry.h
 	<glib-object.h>
 	"atkobjectfactory.h"
 
-1332915124 /usr/include/atk-1.0/atk/atkrelation.h
+1376989194 /usr/include/atk-1.0/atk/atkrelation.h
 	<glib-object.h>
 	<atk/atkrelationtype.h>
 
-1332915124 /usr/include/atk-1.0/atk/atkrelationset.h
+1376989194 /usr/include/atk-1.0/atk/atkrelationset.h
 	<glib-object.h>
 	<atk/atkobject.h>
 	<atk/atkrelation.h>
 
-1332915124 /usr/include/atk-1.0/atk/atkselection.h
+1376989194 /usr/include/atk-1.0/atk/atkselection.h
 	<atk/atkobject.h>
 
-1332915124 /usr/include/atk-1.0/atk/atksocket.h
+1376989194 /usr/include/atk-1.0/atk/atksocket.h
 
-1332915124 /usr/include/atk-1.0/atk/atkstateset.h
+1376989194 /usr/include/atk-1.0/atk/atkstateset.h
 	<glib-object.h>
 	<atk/atkobject.h>
 	<atk/atkstate.h>
 
-1332915124 /usr/include/atk-1.0/atk/atkstreamablecontent.h
+1376989194 /usr/include/atk-1.0/atk/atkstreamablecontent.h
 	<atk/atkobject.h>
 
-1332915124 /usr/include/atk-1.0/atk/atktable.h
+1376989194 /usr/include/atk-1.0/atk/atktable.h
 	<atk/atkobject.h>
 
-1332915124 /usr/include/atk-1.0/atk/atkmisc.h
+1376989194 /usr/include/atk-1.0/atk/atkmisc.h
 	<glib-object.h>
 
-1332915124 /usr/include/atk-1.0/atk/atkvalue.h
+1376989194 /usr/include/atk-1.0/atk/atkvalue.h
 	<atk/atkobject.h>
 
-1332915124 /usr/include/atk-1.0/atk/atkwindow.h
+1376989194 /usr/include/atk-1.0/atk/atkwindow.h
 	<atk/atkobject.h>
 
 1396028418 /usr/include/gtk-2.0/gtk/gtkaccellabel.h
@@ -2418,7 +2419,7 @@
 1396028418 /usr/include/gtk-2.0/gtk/gtktipsquery.h
 	<gtk/gtk.h>
 
-1411826139 source:/home/tibo/QWERYUP/OCR/OCR/gtk.c
+1411826186 source:/home/tibo/QWERYUP/OCR/OCR/gtk.c
 	<stdlib.h>
 	<gtk/gtk.h>
 
@@ -2483,4 +2484,31 @@
 	<stdio.h>
 	<string.h>
 	<assert.h>
+
+1412010641 source:/home/tibo/QWERYUP/OCR/OCR/image_handle.c
+	<stdio.h>
+	<stdlib.h>
+	"stb/stb_image.h"
+	"stb/stb_image_write.h"
+
+1411831521 /home/tibo/QWERYUP/OCR/OCR/stb/stb_image.h
+	<stdio.h>
+	<math.h>
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+	<stdarg.h>
+	<stddef.h>
+	<stdint.h>
+
+1411831521 /home/tibo/QWERYUP/OCR/OCR/stb/stb_image_write.h
+	<stdarg.h>
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<assert.h>
+
+1412007149 /home/tibo/QWERYUP/OCR/OCR/image_handle.h
 
