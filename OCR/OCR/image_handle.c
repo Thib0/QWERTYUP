@@ -35,15 +35,33 @@ int imageFromFile(const char file[], int *width, int *heigth)
     int x, y;
     int i,j;
     printf("%u\n",n);
+    int colorBackground = (data[0] + data[1] + data [2])/3;
 
     for(i = 0; i < (*width)*(*heigth)*3; i+=3)
     {
         image[i/3].red = data[i]*0.3;
         image[i/3].green = data[i+1]*0.59;
         image[i/3].blue = data[i+2]*0.11;
-        data[i] = 0;
-        data[i+1] = 0;
-        data [i+2] = 0;
+
+        int moy = 0;
+        moy = (data[i] + data[i+1] + data [i+2])/3;
+
+        if (moy - 10 >= colorBackground || moy > 150)
+        {
+            data[i] = 255;
+            data[i+1] = 255;
+            data[i+2] = 255;
+        }
+        else
+        {
+            data[i] = 0;
+            data[i+1] = 0;
+            data[i+2] = 0;
+        }
+        /*data[i] = moy;
+        data[i+1] = moy;
+        data[i+2] = moy;*/
+
     }
     for(i = 0; i < (*width)*(*heigth); i++)
     {
