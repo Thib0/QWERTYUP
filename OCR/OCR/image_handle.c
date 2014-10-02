@@ -74,6 +74,20 @@ int imageFromFile(const char file[], int *width, int *heigth) // Thibault style
     stbi_image_free(data);
     return 1;
 }
+imagePtr * imageToData(int width, int heigth, struct pixel image[width][heigth])
+{
+    imagePtr *data = malloc(sizeof(unsigned char)*width*heigth*3);
+
+    int i;
+    printf("image to data");
+    for(i = 0; i < width*heigth*3; i+=3)
+    {
+            data[i]     = image[i%width][i/width].red;
+            data[i + 1] = image[i%width][i/width].green;
+            data[i + 2] = image[i%width][i/width].blue;
+    }
+    return data;
+}
 
 int imageFromFile2(const char file[], int *width, int *heigth) // Moray style
 {
@@ -90,7 +104,7 @@ int imageFromFile2(const char file[], int *width, int *heigth) // Moray style
     int x, y;
     int i,j;
     printf("%u\n",n);
-
+    printf("image from file");
     for(i = 0; i < (*width)*(*heigth)*3; i+=3)
     {
         image[i % *width][i/ *width].red = data[i];
@@ -107,20 +121,5 @@ int imageFromFile2(const char file[], int *width, int *heigth) // Moray style
     stbi_write_bmp(&chemin[0], *width, *heigth, 3, imageToData(*width, *heigth, image));
     stbi_image_free(data);
     return 1;
-}
-
-
-imagePtr * imageToData(int width, int heigth, struct pixel image[width][heigth])
-{
-    imagePtr *data = malloc(sizeof(unsigned char)*width*heigth*3);
-
-    int i;
-    for(i = 0; i < width*heigth*3; i+=3)
-    {
-            data[i]     = image[i%width][i/width].red;
-            data[i + 1] = image[i%width][i/width].green;
-            data[i + 2] = image[i%width][i/width].blue;
-    }
-    return data;
 }
 

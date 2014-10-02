@@ -8,6 +8,6 @@ int main (int argc, char *argv[])
 {
   //setWindow(argc, argv);
   int x, y;
-  imageFromFile("test_scan.png", &x, &y);
+  imageFromFile2("image2.bmp", &x, &y);
   return 0;
 }
