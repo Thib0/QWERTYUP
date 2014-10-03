@@ -32,8 +32,8 @@ int imageFromFile(const char file[], int *width, int *heigth) // Thibault style
     }
 
 
-    int x, y;
-    int i,j;
+
+    int i;
     printf("%u\n",n);
     int colorBackground = (data[0] + data[1] + data [2])/3;
 
@@ -101,15 +101,16 @@ int imageFromFile2(const char file[], int *width, int *heigth) // Moray style
     }
 
 
-    int x, y;
-    int i,j;
+
+    int i;
     printf("%u\n",n);
     printf("image from file");
     for(i = 0; i < (*width)*(*heigth)*3; i+=3)
     {
-        image[i % *width][i/ *width].red = data[i];
-        image[i % *width][i/ *width].green = data[i+1];
-        image[i % *width][i/ *width].blue = data[i+2];
+
+        image[i % *width][i/ ((*width)*3)].red = data[i];
+        image[i % *width][i/ ((*width)*3)].green = data[i+1];
+        image[i % *width][i/ ((*width)*3)].blue = data[i+2];
     }
     /*for(i = 0; i < (*width)*(*heigth); i++)
     {
