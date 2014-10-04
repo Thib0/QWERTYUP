@@ -1,0 +1,4 @@
+QWERTYUP
+=======
+
+OCR PROJECT
