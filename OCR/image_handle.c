@@ -3,29 +3,23 @@
 #include "opencv/highgui.h"
 #include "opencv/cv.h"
 
-int load(int argc, char* argv[])
+IplImage* load(char* image)
 {
   IplImage* img = NULL; 
-  const char* window_title = "Perfect Image";
+  
   int x,y;
 
-  if (argc < 2)
-  {
-    fprintf (stderr, "usage: %s IMAGE\n", argv[0]);
-    return EXIT_FAILURE;
-  }
-  img = cvLoadImage(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
+  img = cvLoadImage(image, CV_LOAD_IMAGE_GRAYSCALE);
 
   if (img == NULL)
   {
-    fprintf (stderr, "couldn't open image file: %s\n", argv[1]);
-    return EXIT_FAILURE;
+    //fprintf (stderr, "couldn't open image file: %s\n", argv[1]);
+    return NULL;
   }
   int colorBackground = CV_IMAGE_ELEM(img, uchar, 0, (0 * 3));
-    int i = img->nChannels;  
-    printf("%d\n",i);
-    for (y = 0; y < img->height;y++)
-{
+  int i = img->nChannels;
+  for (y = 0; y < img->height;y++)
+  {
     for (x = 0; x < img->width;x++)
     {  
         int color = CV_IMAGE_ELEM(img, uchar, y, x);
@@ -37,15 +31,41 @@ int load(int argc, char* argv[])
             {
                 CV_IMAGE_ELEM(img, uchar, y, x) = 0;                
             }
-    }
+   }
+  }
+    return img;
+
 }
 
-  cvNamedWindow (window_title, CV_WINDOW_AUTOSIZE);
-  cvShowImage (window_title, img);
-  cvWaitKey(0);
-  char path[] ="result.bmp";
-  cvSaveImage(&path[0], img, NULL);
-  cvDestroyAllWindows();
-  cvReleaseImage(&img);
-  return 0;
+double compare(IplImage *img1, IplImage *img2)
+{
+    if (img1 == NULL || img2 == NULL) {
+        return -1;
+    }
+    CvSize size;
+    size.width = img1->width;
+    size.height = img1->height;
+    IplImage *newImage = cvCreateImage(size, 8, 1);
+    if (img1->width != img2->width || img1->height != img2->height) {
+        cvResize(img2, newImage, CV_INTER_LINEAR);
+    }else{
+        newImage = img2;
+    }
+    unsigned long long n = 0;
+    for(int i = 0; i < img1->width; i++)
+    {
+        for(int j = 0; j < img1->height; j++)
+        {
+            if (CV_IMAGE_ELEM(img1, uchar, j, i) == CV_IMAGE_ELEM(newImage, uchar, j, i))
+            {
+                n++;
+            }
+        }
+    }
+    return ((double) n/(img1->width * img1->height))*100;
 }
+
+
+
+
+
