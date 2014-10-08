@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "opencv/highgui.h"
 #include "opencv/cv.h"
+#include "image_handle.h"
 
 IplImage* load(char* image)
 {
@@ -23,7 +24,7 @@ IplImage* load(char* image)
     for (x = 0; x < img->width;x++)
     {  
         int color = CV_IMAGE_ELEM(img, uchar, y, x);
-        if (color - 10 >= colorBackground || color > 175)
+        if (color - 10 >= colorBackground || color > 190)
             {
                  CV_IMAGE_ELEM(img, uchar, y, x) = 255;         
             }
@@ -33,6 +34,46 @@ IplImage* load(char* image)
             }
    }
   }
+    //img = checkNoise(img);
+    int x2,y2,w,z,isPerfect,count = 0;
+    //printf("%d\n",CV_IMAGE_ELEM(img, uchar, 0, 0));
+    for (y2 = 0; y2 < img->height && y2 + 10 < img->height;y2 += 10)
+        {
+            //printf("y2 = %d\n",y2);
+            for (x2 = 0; x2 < img->width && x2 + 10 < img->width ;x2 += 10)
+                {  
+                    isPerfect = 0;
+                    count = 0;
+                    //printf("x2 = %d\n",x2);
+                    for (w = y2; w < y2 + 10; w++)
+                       {
+                            for (z = x2; z < x2 + 10; z++)
+                            {
+                                //printf("w = %d and z = %d\n",w,z);
+                                if (CV_IMAGE_ELEM(img, uchar, w, z) != 255 && !isPerfect)
+                                    { count++; }
+                                //printf("count = %d\n", count);
+                                if (w == y2 + 9 && z == x2 + 9 && count <= 3 && !isPerfect)
+                                    {
+                                        isPerfect++;
+                                    }
+                                if (isPerfect == 1)
+                                    {
+                                        //printf("w = %d and z = %d\n",w,z);
+                                        w = y2;
+                                        z = x2;
+                                        isPerfect++;
+                                        //printf("w = %d and z = %d\n",w,z);
+                                    }
+                                
+                                if (isPerfect && CV_IMAGE_ELEM(img, uchar, w, z) != 255)
+                                    {
+                                        CV_IMAGE_ELEM(img, uchar, w, z) = 255;
+                                    }
+                            }
+                       }
+                }
+        }
     return img;
 
 }
@@ -64,7 +105,4 @@ double compare(IplImage *img1, IplImage *img2)
     }
     return ((double) n/(img1->width * img1->height))*100;
 }
-
-
-
 
