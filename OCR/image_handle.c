@@ -17,7 +17,7 @@ IplImage* load(char* image)
     return NULL;
   }
   int colorBackground = CV_IMAGE_ELEM(img, uchar, 0, (0 * 3));
-  int i = img->nChannels;
+  //int i = img->nChannels;
   for (y = 0; y < img->height;y++)
   {
     for (x = 0; x < img->width;x++)
@@ -64,7 +64,6 @@ double compare(IplImage *img1, IplImage *img2)
     }
     return ((double) n/(img1->width * img1->height))*100;
 }
-
 
 
 

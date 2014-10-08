@@ -1,14 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <opencv/highgui.h>
-#include <opencv/cv.h>
+#include "opencv/highgui.h"
+#include "opencv/cv.h"
 #include "image_handle.h"
 #include <string.h>
 
 int main (int argc, char* argv[])
 {
-    int i = 0;
-
+    if(argc < 2)
+    {
+        return EXIT_SUCCESS;
+    }
     IplImage *img = load(argv[1]);
     if(img != NULL)
     {

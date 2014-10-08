@@ -1,6 +1,7 @@
 #ifndef _IMAGE_HANDLE_H_
 #define _IMAGE_HANDLE_H_
 #include "opencv/cv.h"
+#include "opencv/highgui.h"
 /*
     Loads an image at path with given path
     by converting it to a perfect image. 
