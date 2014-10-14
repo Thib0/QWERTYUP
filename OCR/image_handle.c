@@ -3,9 +3,7 @@
 #include "opencv/highgui.h"
 #include "opencv/cv.h"
 #include "image_handle.h"
-int detect_line(IplImage *img, int *lines_number );
-int line_value (IplImage *img,int y);
-int color_line(IplImage *img, int y);
+#include "image_detection.h"
 
 
 IplImage* load(char* image)
@@ -83,7 +81,12 @@ IplImage* load(char* image)
     // call fonction to detection         
     int *lines_number = malloc(sizeof(int)*100);
     int size_lines_number = detect_line(img,lines_number);
-    if (size_lines_number != 0)
+    
+    // rect of all the chars
+    struct rect_char *chars = malloc(sizeof(int)*4*2000);
+    int size_rect_char = detect_char(img,lines_number,size_lines_number,chars);
+    
+    if (size_rect_char != 0)
       printf("succes");
     
     free(lines_number);
