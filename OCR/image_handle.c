@@ -10,7 +10,7 @@ IplImage* load(char* image)
 {
   IplImage* img = NULL; 
   
-  int x,y;
+  //int x,y;
 
   img = cvLoadImage(image, CV_LOAD_IMAGE_GRAYSCALE);
 
@@ -19,7 +19,7 @@ IplImage* load(char* image)
     //fprintf (stderr, "couldn't open image file: %s\n", argv[1]);
     return NULL;
   }
-  int colorBackground = CV_IMAGE_ELEM(img, uchar, 0, (0 * 3));
+  /*int colorBackground = CV_IMAGE_ELEM(img, uchar, 0, (0 * 3));
   //int i = img->nChannels;
   for (y = 0; y < img->height;y++)
   {
@@ -75,7 +75,7 @@ IplImage* load(char* image)
                             }
                        }
                 }
-        }
+        }*/
 
     
     // call fonction to detection         
@@ -87,7 +87,7 @@ IplImage* load(char* image)
     int size_rect_char = detect_char(img,lines_number,size_lines_number,chars);
     
     if (size_rect_char != 0)
-      printf("succes");
+      printf("success\n");
     
     free(lines_number);
     return img;

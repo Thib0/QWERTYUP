@@ -82,7 +82,7 @@ int detect_char (IplImage *img,int lines_number[],int line_numbers_size,
 	if (x2 ==0 && x3 ==1)
 	{
           mem_x1 = x;
-	  printf("%i",x);
+	  printf("%i\n",x);
 	}
 	else if (x2 == 0 && x1 ==1)
 	{
@@ -104,11 +104,11 @@ int detect_char (IplImage *img,int lines_number[],int line_numbers_size,
   for ( i =0 ; i<c; i++)
   {
     color_column(img,chars[i]);
-    printf("%i",c);
+    printf("%i\n",c);
 
   }
   
-  printf("%i",c);
+  printf("%i\n",c);
   return c;
 }
 
@@ -121,7 +121,7 @@ int column_value(int y1, int y2,int x, IplImage *img)
     if (CV_IMAGE_ELEM(img,uchar,i,x) == 0)
       {
 	return 1;
-	printf("succ");
+	printf("succ\n");
       }
 
   }
