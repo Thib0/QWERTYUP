@@ -8,7 +8,7 @@ LDFLAGS=`pkg-config --libs opencv`
 SRC= main.c image_handle.c image_detection.c
 OBJ= ${SRC:.c=.o}
 
-all: main
+all: main clean
 
 main: ${OBJ}
 
