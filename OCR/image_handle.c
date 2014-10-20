@@ -85,7 +85,14 @@ IplImage* load(char* image)
     // rect of all the chars
     struct rect_char *chars = malloc(sizeof(int)*4*2000);
     int size_rect_char = detect_char(img,lines_number,size_lines_number,chars);
+    for (int i = 0 ; i < size_lines_number; i++)
+	color_line(img,lines_number[i]);
     
+    for (int j = 0 ; j <size_rect_char ; j++)
+    {
+	
+	color_column(img,chars[j]);
+    }
 
     if (size_rect_char != 0)
       printf("success\n");

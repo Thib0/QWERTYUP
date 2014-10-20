@@ -10,6 +10,7 @@
 int detect_line(IplImage *img, int *lines_number )
 {
 
+
   int y,y0,y1,y2,size_lines_number = 0;
   // int old_up=0,old_down=1;
   for (y=4; y<( img->height - 1);y++)
@@ -36,10 +37,6 @@ int detect_line(IplImage *img, int *lines_number )
       }
     }
 
-  for (int i = 0 ; i < size_lines_number;i++)
-    {
-      color_line(img,lines_number[i]);
-    }
 
   return size_lines_number;
 }
@@ -76,13 +73,20 @@ int color_line (IplImage *img, int y)
 int detect_char (IplImage *img,int lines_number[],int line_numbers_size,
 		struct  rect_char chars[])
 {
+  
+  // detection space 
+  int white = 0;
+  int first_char = 0;
+  
   int i,x,x1,x2,x3,mem_x1,mem_x2,c=0;
 
   for (i=0;i< line_numbers_size;i= i+2)
     {
       mem_x1 = -1;
       mem_x2 = -1;
-      
+      white = 0;
+      first_char = 0;
+
       for(x=1 ; x < img->width-1; x++)
       {
         
@@ -90,35 +94,59 @@ int detect_char (IplImage *img,int lines_number[],int line_numbers_size,
 	x2 = column_value(lines_number[i],lines_number[i+1],x,img);
 	x3 = column_value(lines_number[i],lines_number[i+1],x+1,img);
 	
+// attention ordre des tests  important, pcq si un seul pixel il ne detecte pas
+// la ligne de fin et la prend pour une ligne de début, elle zappe donc un
+// caractère
+	if (x2 == 0 && x1 == 1)
+	{
+		mem_x2=x;	
+	}
 
-	if (x2 ==0 && x3 ==1)
-	{
-          mem_x1 = x;
-	}
-	else if (x2 == 0 && x1 ==1)
-	{
-	  mem_x2= x;
-	}
-	
-	if (mem_x2 != -1)
+	if(mem_x2 != -1 && mem_x1 != -1)
 	{
 	  chars[c].y = lines_number[i];
 	  chars[c].x = mem_x1;
 	  chars[c].width = mem_x2 - mem_x1;
 	  chars[c].height = lines_number[i+1] - lines_number[i];
-	  mem_x2 = -1;
 	  c++;
+	  
+	  /*
+	  if (white > 7 && c>1 && first_char == 1 )
+	  {
+	    chars[c].y = lines_number[i];
+	    chars[c].x =mem_x1 +chars[c-1].width +2 ;
+	    chars[c].width = white -2;
+	    chars[c].height = lines_number[i+1]-lines_number[i];
+	    c++;
+	    white = 0;
+	  }
+	  white =0;
+	  first_char = 1;
+
+	  
+	  */
+	  mem_x2 = -1;
+	  mem_x1 = -1;
 	}
+
+	/*
+	if( x1 == 0 && x2 ==0 && x3 ==0)
+	{
+	  white ++;	 
+	}*/
+			
+	if (x2 == 0 && x3 == 1 )
+	{
+	  mem_x1 = x;
+	}
+
+
+
       }
     }
-
-  for ( i =0 ; i<c; i++)
-  {
-    color_column(img,chars[i]);
-  }
   
   return c;
-}
+} 
 
 int column_value(int y1, int y2,int x, IplImage *img)
 {
