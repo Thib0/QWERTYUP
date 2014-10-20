@@ -2,10 +2,10 @@
 #define _NEURONAL_NETWORK_H_
 #include <stdio.h>
 #include <stdlib.h>
-#define neral_network neuron*
+//#define netral_network struct neuron*
 
 struct neuron;
-struct neuronal_connection;
+struct neural_connection;
 
 enum neuron_type
 {
@@ -17,14 +17,25 @@ enum neuron_type
 struct neuron
 {
     double input;
-    unsigned connectionCount;
+    unsigned connectionsCount;
     struct neural_connection *connections;
-    unsigned isOutput;
+    enum neuron_type type;
 };
+
 struct neural_connection
 {
-	struct neuron start;
-    struct neuron end;
+	struct neuron *start;
+    struct neuron *end;
     double w;
 };
+
+struct neuron_output
+{
+    double *outputs;
+    unsigned count;
+};
+
+void initWeights(struct neuron *network);
+void displayWeights(struct neuron *network);
+
 #endif
