@@ -31,9 +31,9 @@ void addToOutput(struct neuron_output *out, double v)
 {
     double *aux = malloc(sizeof(double) * (out->count + 1));
     aux = out->outputs;
-    aux[count + 1] = v;
+    aux[out->count + 1] = v;
     out->outputs = aux;
-    count++;
+    (out->count)++;
 }
 void resetInputs(struct neuron *network)
 {
