@@ -10,7 +10,7 @@ int main (int argc, char* argv[])
 {
     srand(time(NULL));
     
-    struct neuron* network = malloc(sizeof(struct neuron));
+    /*struct neuron* network = malloc(sizeof(struct neuron));
     network->connections = malloc(sizeof(struct neural_connection) * 2);
     
     network->connectionsCount = 2;
@@ -26,9 +26,17 @@ int main (int argc, char* argv[])
     network->connections[0].end = neuron1;
     network->connections[1].start = network;
     network->connections[1].end = neuron2;
-    
+     
     initWeights(network);
     displayWeights(network);
+    */
+
+    struct neural_network *network = createNetwork(3, 2, 2);
+    printf("network created\n");
+    network->neurons[0][0].input = 1;
+    network->neurons[0][1].input = 0;
+    printf("input set\n");
+    printf("%f\n",getOutput(network));
     
     if(argc < 2)
     {
