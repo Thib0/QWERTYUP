@@ -36,7 +36,8 @@ int main (int argc, char* argv[])
     network->neurons[0][0].input = 1;
     network->neurons[0][1].input = 0;
     printf("input set\n");
-    printf("%f\n",getOutput(network));
+    double out = getOutput(network);
+    printf("%f\n",out);
     
     if(argc < 2)
     {

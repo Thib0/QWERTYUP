@@ -52,13 +52,13 @@ struct neural_network *createNetwork(unsigned layerCount, unsigned inputCount, u
     // inits
     // input layer
     for (unsigned i = 0; i < inputCount; i++) {
-        layers[1][i].input = 0;
-        layers[1][i].type = input;
-        layers[1][i].connectionsCount = neuronCount;
-        layers[1][i].delta = 0;
-        layers[1][i].w = malloc(sizeof(double) * neuronCount);
+        layers[0][i].input = 0;
+        layers[0][i].type = input;
+        layers[0][i].connectionsCount = neuronCount;
+        layers[0][i].delta = 0;
+        layers[0][i].w = malloc(sizeof(double) * neuronCount);
         for (unsigned k = 0; k < inputCount; k++) {
-            layers[1][i].w[k] = my_random();
+            layers[0][i].w[k] = my_random();
         }
     }
     // hidden layers
@@ -101,9 +101,12 @@ struct neural_network *createNetwork(unsigned layerCount, unsigned inputCount, u
 
 double getOutput(struct neural_network *network)
 {
+    printf("lol\n");
     struct neuron **neurons = network->neurons;
+    printf("ok\n");
     for (unsigned i = 0; i < network->inputCount; i++) {
         for (unsigned j = 0; j < network->neuronPerLayer; j++) {
+            printf("%i %i",i,j);
             neurons[1][j].input += neurons[0][i].w[j] * neurons[0][i].input;
         }
     }
@@ -120,7 +123,7 @@ double getOutput(struct neural_network *network)
     // last hidden layer
     unsigned n = network->layerCount;
         for (unsigned i = 0; i < network->neuronPerLayer; i++) {
-            neurons[n - 1][0].input += neurons[n - 1][i].w[0] * neurons[n - 1][i].input;
+            neurons[n - 1][0].input += neurons[n - 2][i].w[0] * neurons[n - 2][i].input;
         }
     
     return network->neurons[n - 1][0].input;
