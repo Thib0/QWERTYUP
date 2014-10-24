@@ -12,27 +12,23 @@ int detect_line(IplImage *img, int *lines_number )
 
 
   int y,y0,y1,y2,size_lines_number = 0;
-  // int old_up=0,old_down=1;
+  
   for (y=4; y<( img->height - 1);y++)
     {
-      y0 = line_value(img,y-1); // test y-1
-      y1 = line_value(img,y);   // test y
-      y2 = line_value(img,y+ 1); // test y+1                
+      y0 = line_value(img,y-1);
+      y1 = line_value(img,y);  
+      y2 = line_value(img,y+ 1);             
 
-      if ( y1==0 && y2==1)// && old_down == 1)
+      if ( y1==0 && y2==1)
 	{
 	   
           lines_number[size_lines_number] = y;
           size_lines_number ++;
-	  //  old_down=0;
-	  // old_up = 1;
         }
-      else if (y1==0 && y0==1)// && old_up ==1)
+      else if (y1==0 && y0==1)
       {
 	lines_number[size_lines_number] = y;
 	size_lines_number ++;
-	//old_down=1;
-	//old_up = 0;
 
       }
     }
@@ -108,43 +104,47 @@ int detect_char (IplImage *img,int lines_number[],int line_numbers_size,
 	  chars[c].x = mem_x1;
 	  chars[c].width = mem_x2 - mem_x1;
 	  chars[c].height = lines_number[i+1] - lines_number[i];
+	  color_column(img,chars [c]);
 	  c++;
 	  
-	  /*
-	  if (white > 7 && c>1 && first_char == 1 )
+	  
+	  if (white > 6 && c>0 && first_char == 1 )
 	  {
 	    chars[c].y = lines_number[i];
-	    chars[c].x =mem_x1 +chars[c-1].width +2 ;
-	    chars[c].width = white -2;
+	    chars[c].x = chars[c-2].x + chars[c - 2].width +2 ;
+	    chars[c].width = white -4;
 	    chars[c].height = lines_number[i+1]-lines_number[i];
+	    color_column(img,chars[c]);
 	    c++;
 	    white = 0;
+
 	  }
 	  white =0;
 	  first_char = 1;
 
 	  
-	  */
+	  
 	  mem_x2 = -1;
 	  mem_x1 = -1;
 	}
 
-	/*
+	
 	if( x1 == 0 && x2 ==0 && x3 ==0)
 	{
 	  white ++;	 
-	}*/
+	}
 			
 	if (x2 == 0 && x3 == 1 )
 	{
 	  mem_x1 = x;
 	}
 
-
-
+	//if (i == 2)
+	 // printf("white %i", white);
       }
     }
-  
+    
+    printf("nb rectangle %i ",c);
   return c;
 } 
 

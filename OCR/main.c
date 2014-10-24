@@ -31,14 +31,14 @@ int main (int argc, char* argv[])
     displayWeights(network);
     */
 
-    struct neural_network *network = createNetwork(3, 2, 2);
+  /*  struct neural_network *network = createNetwork(3, 2, 2);
     printf("network created\n");
     network->neurons[0][0].input = 1;
     network->neurons[0][1].input = 0;
     printf("input set\n");
     double out = getOutput(network);
     printf("%f\n",out);
-    
+*/    
     if(argc < 2)
     {
         return EXIT_SUCCESS;
