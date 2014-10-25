@@ -21,6 +21,7 @@ int main (int argc, char* argv[])
     struct neural_network *network = createNetwork(3, 3, 2);
     
     double out00, out01, out10, out11;
+    unsigned count = 0;
     do
     {
         
@@ -36,10 +37,10 @@ int main (int argc, char* argv[])
         setInput(1,0, network);
         out10 = getOutput(network);
         learn(network, 1);
-        
+        count++;
         printf("0xor0: %f 0xor1: %f 1xor0: %f 1xor1: %f\n", out00, out01, out10, out11);
-    }while (out00 > 0.05 || out01 < 0.95 || out10 < 0.95 || out11 > 0.05);
-    
+    }while ((out00 > 0.05 || out01 < 0.95 || out10 < 0.95 || out11 > 0.05) && count < 200000);
+    printf("%u iterations\n",count);
         if(argc < 2)
     {
         return EXIT_SUCCESS;

@@ -3,19 +3,27 @@
 #include <time.h>
 #include "neural_network.h"
 #include <math.h>
-#define alpha 0.1
+#define alpha 0.35
 
 double my_random()
 {
     double r = rand();
     int sign = rand()%2;
     sign = sign == 1 ? 1 : -1;
-    while (r > 1) {
+    while (r > 0.5) {
         r /= 10;
     }
     r *= rand();
     while(r > 1)
         r /= 10;
+    /*if (r > 0.43 && r < 0.63) {
+        int s = rand();
+        while (s > 1) {
+            s /= 10;
+        }
+        int sign = r < 0.5 ? -1 : 1;
+        r += s*sign;
+    }*/
     return sign*r;
 }
 
