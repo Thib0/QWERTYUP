@@ -108,7 +108,7 @@ int detect_char (IplImage *img,int *lines_number,int line_numbers_size,
 	  	chars = realloc_r(ptr,(c+1)*sizeof(struct rect_char));
 	  if(chars == NULL)
 		  printf("chars = NUL");
-	  printf("%i \n",c);
+	 // printf("%i \n",c);
 	  chars[c].y = lines_number[i];
 	  chars[c].x = mem_x1;
 	  chars[c].width = mem_x2 - mem_x1;
@@ -123,7 +123,7 @@ int detect_char (IplImage *img,int *lines_number,int line_numbers_size,
 	    if(chars == NULL)
 		    printf("chars = NULL");
 	    
-	    printf("%i \n",c);
+	   // printf("%i \n",c);
 	    chars[c].y = lines_number[i];
 	    chars[c].x = chars[c-2].x +chars[c - 2].width +2 ;
 	    chars[c].width = white -4;
