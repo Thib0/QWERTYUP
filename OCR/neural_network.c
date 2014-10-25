@@ -3,6 +3,7 @@
 #include <time.h>
 #include "neural_network.h"
 #include <math.h>
+#define alpha 0.1
 
 double my_random()
 {
@@ -138,6 +139,73 @@ void learn(struct neural_network *network, double res)
     unsigned n = network->layerCount;
     network->neurons[n-1][0].delta = res -sigmoide(network->neurons[n - 1][0].input);
 
-    //Last hidden Layers
-    
+    //Last hidden Layer
+    for (unsigned i = 0; i < network->neuronPerLayer;i++)
+    {
+        double in = sigmoide(network->neurons[n-2][i].input);
+        double w = network->neurons[n-2][i].w[0];
+        network->neurons[n-2][i].delta = in*(1-in)*(w*network->neurons[n-1][0].delta); 
+    }
+
+    //Hidden layers
+    struct neuron **neurons = network->neurons;
+
+    for (int i = n-3 ; i > 0 ; i--)
+    {
+        for (unsigned j = 0; j < network->neuronPerLayer;j++)
+        {
+        double tmp = 0;
+            for (unsigned k = 0; k < network->neuronPerLayer;k++)
+            {
+               tmp += neurons[i+1][k].delta*neurons[i][j].w[k];
+            }
+        neurons[i][j].delta = tmp*sigmoide(neurons[i][j].input)*(1-sigmoide(neurons[i][j].input));
+        }
+
+    }
+    //Input maj w
+    for (unsigned i = 0; i < network->inputCount; i++) 
+    {
+        for (unsigned j = 0; j < network->neuronPerLayer; j++) 
+        {
+            neurons[0][i].w[j] += alpha*sigmoide(neurons[0][i].input)*neurons[1][j].delta;
+        }
+    }
+    //Hidden layer
+    for(unsigned i = 1; i < n - 2; i++)
+    {
+        for (unsigned j = 0; j < network->neuronPerLayer;j++)
+        {
+            for (unsigned k = 0; k < network->neuronPerLayer;k++)
+            {
+                neurons[i][j].w[k] += alpha*sigmoide(neurons[i][j].input)*neurons[i+1][k].delta;
+            }
+        }
+    }
+
+    //Last hidden layer
+    for (unsigned j = 0; j < network->neuronPerLayer;j++)
+    {
+        neurons[n-2][j].w[0] += alpha*sigmoide(neurons[n-2][j].input)*neurons[n-1][0].delta;
+    }
+
+    resetNetwork(network);
 }
+
+void resetNetwork(struct neural_network *network)
+{
+    //Hidden layer
+    for(unsigned i = 1; i < network->layerCount - 1; i++)
+    {
+        for (unsigned j = 0; j < network->neuronPerLayer;j++)
+        {
+            network->neurons[i][j].delta = 0;
+            network->neurons[i][j].input = 0;
+        }
+    }
+    
+    //Output
+    network->neurons[network->layerCount-1][0].delta = 0;
+    network->neurons[network->layerCount-1][0].input = 0;
+}
+

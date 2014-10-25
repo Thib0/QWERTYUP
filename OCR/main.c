@@ -13,12 +13,18 @@ int main (int argc, char* argv[])
     struct neural_network *network = createNetwork(3, 2, 2);
     printf("Network created\n");
     network->neurons[0][0].input = 0; 
-    network->neurons[0][1].input = 1;
+    network->neurons[0][1].input = 0 ;
     printf("Input set\n");
+    
     double out = getOutput(network);
+    while(out > 0.1)
+    {
+        printf("Output : %f\n",out);
+        learn(network,0);
+        out = getOutput(network);
+    }
     printf("Output : %f\n",out);
-    freeNetwork(network);
-    if(argc < 2)
+        if(argc < 2)
     {
         return EXIT_SUCCESS;
     }
@@ -38,6 +44,7 @@ int main (int argc, char* argv[])
     {
         printf("Error loading image.\n");
     }
-   
+   freeNetwork(network);
+
   return EXIT_SUCCESS;
 }
