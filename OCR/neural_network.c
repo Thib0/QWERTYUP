@@ -114,7 +114,7 @@ double getOutput(struct neural_network *network)
     }
     // hidden layers
     for (unsigned k = 1; k < network->layerCount - 2; k++) {
-        for (unsigned i = 0; i < network->inputCount; i++) {
+        for (unsigned i = 0; i < network->neuronPerLayer; i++) {
             for (unsigned j = 0; j < network->neuronPerLayer; j++) {
                 neurons[k+1][j].input += neurons[k][i].w[j] * neurons[k][i].input;
             }
