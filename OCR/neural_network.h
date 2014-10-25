@@ -34,4 +34,5 @@ struct neural_network *createNetwork(unsigned layerCount, unsigned inputCount, u
 double getOutput(struct neural_network *network);
 void displayWeights(struct neuron *network);
 void freeNetwork(struct neural_network *network);
+double sigmoide(double s);
 #endif

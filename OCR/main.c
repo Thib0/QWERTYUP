@@ -17,7 +17,7 @@ int main (int argc, char* argv[])
     printf("Input set\n");
     double out = getOutput(network);
     printf("Output : %f\n",out);
-    
+    freeNetwork(network);
     if(argc < 2)
     {
         return EXIT_SUCCESS;
@@ -38,6 +38,6 @@ int main (int argc, char* argv[])
     {
         printf("Error loading image.\n");
     }
-    freeNetwork(network);
+   
   return EXIT_SUCCESS;
 }

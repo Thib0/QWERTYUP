@@ -2,17 +2,20 @@
 #include <stdlib.h>
 #include <time.h>
 #include "neural_network.h"
+#include <math.h>
 
 double my_random()
 {
     double r = rand();
+    int sign = rand()%2;
+    sign = sign == 1 ? 1 : -1;
     while (r > 1) {
         r /= 10;
     }
     r *= rand();
     while(r > 1)
         r /= 10;
-    return r;
+    return sign*r;
 }
 
 struct neural_network *createNetwork(unsigned layerCount, unsigned inputCount, unsigned neuronCount)
@@ -88,17 +91,17 @@ double getOutput(struct neural_network *network)
     for (unsigned k = 1; k < network->layerCount - 2; k++) {
         for (unsigned i = 0; i < network->neuronPerLayer; i++) {
             for (unsigned j = 0; j < network->neuronPerLayer; j++) {
-                neurons[k+1][j].input += neurons[k][i].w[j] * neurons[k][i].input;
+                neurons[k+1][j].input += neurons[k][i].w[j] * sigmoide(neurons[k][i].input);
             }
         }
     }
     // last hidden layer
     unsigned n = network->layerCount;
         for (unsigned i = 0; i < network->neuronPerLayer; i++) {
-            neurons[n - 1][0].input += neurons[n - 2][i].w[0] * neurons[n - 2][i].input;
+            neurons[n - 1][0].input += neurons[n - 2][i].w[0] * sigmoide(neurons[n - 2][i].input);
         }
     
-    return network->neurons[n - 1][0].input;
+    return sigmoide(network->neurons[n - 1][0].input);
 }
 
 void freeNetwork(struct neural_network *network)
@@ -120,4 +123,21 @@ void freeNetwork(struct neural_network *network)
    }
    free(network->neurons);
    free(network);
+}
+
+double sigmoide(double s)
+{
+    double res = 0;
+    res = 1 / (1 + exp(-s));
+    return res;
+}
+
+void learn(struct neural_network *network, double res)
+{
+    //Output
+    unsigned n = network->layerCount;
+    network->neurons[n-1][0].delta = res -sigmoide(network->neurons[n - 1][0].input);
+
+    //Last hidden Layers
+    
 }
