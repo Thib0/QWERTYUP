@@ -3,7 +3,7 @@ CC=clang
 
 CPPFLAGS=`pkg-config --cflags opencv`
 #CFLAGS= -Wall -Wextra -Werror -std=c99 -O2
-LDFLAGS=`pkg-config --libs opencv`
+LDFLAGS=`pkg-config --libs opencv` -lm
 
 SRC= main.c image_handle.c image_detection.c neural_network.c
 OBJ= ${SRC:.c=.o}
