@@ -6,24 +6,40 @@
 #include "neural_network.h"
 #include <time.h>
 
+
+void setInput(int a, int b, struct neural_network *network)
+{
+    network->neurons[0][0].input = a;
+    network->neurons[0][1].input = b;
+    network->neurons[0][2].input = 1;
+}
+
 int main (int argc, char* argv[])
 {
     srand(time(NULL));
 
-    struct neural_network *network = createNetwork(3, 2, 2);
-    printf("Network created\n");
-    network->neurons[0][0].input = 0; 
-    network->neurons[0][1].input = 0 ;
-    printf("Input set\n");
+    struct neural_network *network = createNetwork(3, 3, 2);
     
-    double out = getOutput(network);
-    while(out > 0.1)
+    double out00, out01, out10, out11;
+    do
     {
-        printf("Output : %f\n",out);
-        learn(network,0);
-        out = getOutput(network);
-    }
-    printf("Output : %f\n",out);
+        
+        setInput(1,1, network);
+        out11 = getOutput(network);
+        learn(network, 0);
+        setInput(0,0, network);
+        out00 = getOutput(network);
+        learn(network, 0);
+        setInput(0,1,network);
+        out01 = getOutput(network);
+        learn(network, 1);
+        setInput(1,0, network);
+        out10 = getOutput(network);
+        learn(network, 1);
+        
+        printf("0xor0: %f 0xor1: %f 1xor0: %f 1xor1: %f\n", out00, out01, out10, out11);
+    }while (out00 > 0.05 || out01 < 0.95 || out10 < 0.95 || out11 > 0.05);
+    
         if(argc < 2)
     {
         return EXIT_SUCCESS;
