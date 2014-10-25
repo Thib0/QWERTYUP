@@ -32,12 +32,12 @@ int main (int argc, char* argv[])
     */
 
     struct neural_network *network = createNetwork(3, 2, 2);
-    printf("network created\n");
+    printf("Network created\n");
     network->neurons[0][0].input = 1;
-    network->neurons[0][1].input = 0;
-    printf("input set\n");
+    network->neurons[0][1].input = 1;
+    printf("Input set\n");
     double out = getOutput(network);
-    printf("%f\n",out);
+    printf("Output : %f\n",out);
     
     if(argc < 2)
     {

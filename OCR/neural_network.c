@@ -37,6 +37,9 @@ double my_random()
     while (r > 1) {
         r /= 10;
     }
+    r *= rand();
+    while(r > 1)
+        r /= 10;
     return r;
 }
 
@@ -44,7 +47,7 @@ struct neural_network *createNetwork(unsigned layerCount, unsigned inputCount, u
 {
     // allocs
     struct neuron **layers = malloc(sizeof(struct neuron*) * layerCount);
-    layers[0] = malloc(sizeof(struct neuron*) * inputCount);
+    layers[0] = malloc(sizeof(struct neuron) * inputCount);
     for (unsigned i = 1; i < layerCount - 1; i++) {
             layers[i] = malloc(sizeof(struct neuron) * neuronCount);
     }
@@ -57,7 +60,7 @@ struct neural_network *createNetwork(unsigned layerCount, unsigned inputCount, u
         layers[0][i].connectionsCount = neuronCount;
         layers[0][i].delta = 0;
         layers[0][i].w = malloc(sizeof(double) * neuronCount);
-        for (unsigned k = 0; k < inputCount; k++) {
+        for (unsigned k = 0; k < neuronCount; k++) {
             layers[0][i].w[k] = my_random();
         }
     }
@@ -74,6 +77,7 @@ struct neural_network *createNetwork(unsigned layerCount, unsigned inputCount, u
             }
         }
     }
+
     // last hidden layer
     for (unsigned i = 0; i < neuronCount; i++) {
         layers[layerCount - 2][i].input = 0;
@@ -83,6 +87,7 @@ struct neural_network *createNetwork(unsigned layerCount, unsigned inputCount, u
         layers[layerCount - 2][i].w = malloc(sizeof(double));
         layers[layerCount - 2][i].w[0] = my_random();
     }
+
     // output layer
     layers[layerCount - 1][1].input = 0;
     layers[layerCount - 1][1].type = output;
@@ -95,22 +100,18 @@ struct neural_network *createNetwork(unsigned layerCount, unsigned inputCount, u
     new_network->inputCount = inputCount;
     new_network->layerCount = layerCount;
     new_network->neuronPerLayer = neuronCount;
-    
+
     return new_network;
 }
 
 double getOutput(struct neural_network *network)
 {
-    printf("lol\n");
     struct neuron **neurons = network->neurons;
-    printf("ok\n");
     for (unsigned i = 0; i < network->inputCount; i++) {
         for (unsigned j = 0; j < network->neuronPerLayer; j++) {
-            printf("%i %i",i,j);
             neurons[1][j].input += neurons[0][i].w[j] * neurons[0][i].input;
         }
     }
-    printf("first layer done\n");
     // hidden layers
     for (unsigned k = 1; k < network->layerCount - 2; k++) {
         for (unsigned i = 0; i < network->inputCount; i++) {
@@ -119,7 +120,6 @@ double getOutput(struct neural_network *network)
             }
         }
     }
-    printf("hidden layers done\n");
     // last hidden layer
     unsigned n = network->layerCount;
         for (unsigned i = 0; i < network->neuronPerLayer; i++) {
