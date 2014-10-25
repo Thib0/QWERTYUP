@@ -9,31 +9,10 @@
 int main (int argc, char* argv[])
 {
     srand(time(NULL));
-    
-    /*struct neuron* network = malloc(sizeof(struct neuron));
-    network->connections = malloc(sizeof(struct neural_connection) * 2);
-    
-    network->connectionsCount = 2;
-    network->type = input;
-    struct neuron *neuron1 = malloc(sizeof(struct neuron));
-    neuron1->connectionsCount = 0;
-    neuron1->type = output;
-    struct neuron *neuron2 = malloc(sizeof(struct neuron));
-    neuron2->connectionsCount = 0;
-    neuron2->type = output;
-    
-    network->connections[0].start = network;
-    network->connections[0].end = neuron1;
-    network->connections[1].start = network;
-    network->connections[1].end = neuron2;
-     
-    initWeights(network);
-    displayWeights(network);
-    */
 
     struct neural_network *network = createNetwork(3, 2, 2);
     printf("Network created\n");
-    network->neurons[0][0].input = 1;
+    network->neurons[0][0].input = 0; 
     network->neurons[0][1].input = 1;
     printf("Input set\n");
     double out = getOutput(network);
@@ -59,5 +38,6 @@ int main (int argc, char* argv[])
     {
         printf("Error loading image.\n");
     }
+    freeNetwork(network);
   return EXIT_SUCCESS;
 }

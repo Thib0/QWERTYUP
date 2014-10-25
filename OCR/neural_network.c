@@ -3,34 +3,6 @@
 #include <time.h>
 #include "neural_network.h"
 
-/*
-
-void displayWeights(struct neuron *network){
-    for (int i = 0; i < network->connectionsCount; i++) {
-        printf("%f\n",network->connections[i].w);
-        displayWeights(network->connections[i].end);
-    }
-}
-
-void addToOutput(struct neuron_output *out, double v)
-{
-    double *aux = malloc(sizeof(double) * (out->count + 1));
-    aux = out->outputs;
-    aux[out->count + 1] = v;
-    out->outputs = aux;
-    (out->count)++;
-}
-void resetInputs(struct neuron *network)
-{
-    if (network == NULL) {
-        return;
-    }
-    for (int i = 0; i < network->connectionsCount; i++) {
-        network->input = 0;
-        resetInputs(network->connections[i].end);
-    }
-}
-*/
 double my_random()
 {
     double r = rand();
@@ -129,3 +101,23 @@ double getOutput(struct neural_network *network)
     return network->neurons[n - 1][0].input;
 }
 
+void freeNetwork(struct neural_network *network)
+{
+    for(unsigned i = 0; i < network->inputCount; i++)
+    {
+       free(network->neurons[0][i].w);
+    }
+   for(unsigned i = 1; i < network->layerCount-1;i++)
+   {
+        for (unsigned j = 0; j < network->neuronPerLayer;j++)
+        {
+           free((network->neurons[i][j]).w); 
+        }
+   }
+    for (unsigned i = 0 ; i < network->layerCount;i++)
+   {
+        free(network->neurons[i]);
+   }
+   free(network->neurons);
+   free(network);
+}

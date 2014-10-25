@@ -98,7 +98,7 @@ IplImage* load(char* image)
       printf("success\n");
     
       free(lines_number);
-
+      free(chars);
 
     return img;
 
