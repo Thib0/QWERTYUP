@@ -7,7 +7,7 @@
 
 
 
-int detect_line(IplImage *img, int *lines_number )
+int detect_line(IplImage *img, int *lines_number,int **ptr )
 {
 
 
@@ -21,12 +21,16 @@ int detect_line(IplImage *img, int *lines_number )
 
       if ( y1==0 && y2==1)
 	{
-	   
-          lines_number[size_lines_number] = y;
+	  if (size_lines_number != 0)
+	  	lines_number =realloc_l(ptr,(size_lines_number+1)*sizeof(int)) ;
+        
+	  lines_number[size_lines_number] = y;
           size_lines_number ++;
         }
       else if (y1==0 && y0==1)
       {
+	lines_number =realloc_l(ptr,(size_lines_number+1)*sizeof(int))  ;
+
 	lines_number[size_lines_number] = y;
 	size_lines_number ++;
 
@@ -66,8 +70,8 @@ int color_line (IplImage *img, int y)
   return 0;
 }
 
-int detect_char (IplImage *img,int lines_number[],int line_numbers_size,
-		struct  rect_char chars[])
+int detect_char (IplImage *img,int *lines_number,int line_numbers_size,
+		struct  rect_char *chars,struct rect_char **ptr)
 {
   
   // detection space 
@@ -100,6 +104,11 @@ int detect_char (IplImage *img,int lines_number[],int line_numbers_size,
 
 	if(mem_x2 != -1 && mem_x1 != -1)
 	{
+	  if (c != 0)
+	  	chars = realloc_r(ptr,(c+1)*sizeof(struct rect_char));
+	  if(chars == NULL)
+		  printf("chars = NUL");
+	  printf("%i \n",c);
 	  chars[c].y = lines_number[i];
 	  chars[c].x = mem_x1;
 	  chars[c].width = mem_x2 - mem_x1;
@@ -110,8 +119,13 @@ int detect_char (IplImage *img,int lines_number[],int line_numbers_size,
 	  
 	  if (white > 6 && c>0 && first_char == 1 )
 	  {
+	    chars = realloc_r(ptr,(c+1)*sizeof(struct rect_char));
+	    if(chars == NULL)
+		    printf("chars = NULL");
+	    
+	    printf("%i \n",c);
 	    chars[c].y = lines_number[i];
-	    chars[c].x = chars[c-2].x + chars[c - 2].width +2 ;
+	    chars[c].x = chars[c-2].x +chars[c - 2].width +2 ;
 	    chars[c].width = white -4;
 	    chars[c].height = lines_number[i+1]-lines_number[i];
 	    color_column(img,chars[c]);
@@ -174,3 +188,23 @@ int color_column(IplImage *img,struct rect_char chars)
 
   return 0;
 }
+
+int* realloc_l(int **ptr, size_t taille)
+{
+     int *ptr_realloc = realloc(*ptr, taille);
+
+     if (ptr_realloc != NULL)
+	      *ptr = ptr_realloc;
+
+     return ptr_realloc;
+}
+struct rect_char* realloc_r(struct rect_char **ptr, size_t taille)
+{
+     struct rect_char *ptr_realloc = realloc(*ptr, taille);
+
+     if (ptr_realloc != NULL)
+	      *ptr = ptr_realloc;
+
+     return ptr_realloc;
+}
+
