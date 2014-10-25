@@ -21,11 +21,11 @@ int main (int argc, char* argv[])
        
         struct neural_network *network = createNetwork(3, 3, 2);
        
-
+        int loopCount = 0;
         double out00, out01, out10, out11;
         do
         {
-
+            loopCount++;
             setInput(1,1, network);
             out11 = getOutput(network);
             learn(network, 0);
@@ -43,7 +43,7 @@ int main (int argc, char* argv[])
         }while (out00 > 0.05 || out01 < 0.95 || out10 < 0.95 || out11 > 0.05);
 
         //freeNetwork(network);
-        printf("FreeNetwork done\n"); 
+        printf("Loop count : %d\n",loopCount); 
         _Exit(0);
     }
 
