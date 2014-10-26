@@ -158,7 +158,7 @@ int column_value(int y1, int y2,int x, IplImage *img)
     int i;
     for(i=y1 +1 ; i<y2;i++)
     {
-        // if black pixel return 1                                                
+        // if black pixel return 1 
         if (CV_IMAGE_ELEM(img,uchar,i,x) < 50)
         {
             return 1;
