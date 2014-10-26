@@ -56,7 +56,8 @@ int main (int argc, char* argv[])
         }while(proceed);
 
 
-        //freeNetwork(network);
+        freeNetwork(network);
+        printf("Network freed.\n");
         printf("Loop count : %i\n",(count - 1)*200000 + loopCount); 
         _Exit(0);
     }
@@ -74,12 +75,19 @@ int main (int argc, char* argv[])
             cvSaveImage(&path[0], img, NULL);
             cvDestroyAllWindows();
             cvReleaseImage(&img);
+            printf("Everything went fine. Exiting...\n");
+            return 0;
         }
         else
         {
             printf("Error loading image.\n");
+            return -1;
         }
     }
-
-    return EXIT_SUCCESS;
+    else 
+    {
+        printf("Argument issue. Exiting...\n");
+        return -1;
+    }
+    
 }

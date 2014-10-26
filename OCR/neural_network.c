@@ -126,10 +126,10 @@ void freeNetwork(struct neural_network *network)
            free((network->neurons[i][j]).w); 
         }
    }
-    /*for (unsigned i = 0 ; i < network->layerCount;i++)
+    for (unsigned i = 0 ; i < network->layerCount-1;i++)
    {
-        free(network->neurons[i]);
-   }*/
+       free(network->neurons[i]);
+   }
    free(network->neurons);
    free(network);
    network = NULL;
