@@ -5,40 +5,39 @@
 #include "image_handle.h"
 #include "image_detection.h"
 
-
 IplImage* load(char* image)
 {
-  IplImage* img = NULL; 
-  
-  //int x,y;
+    IplImage* img = NULL; 
 
-  img = cvLoadImage(image, CV_LOAD_IMAGE_GRAYSCALE);
+    //int x,y;
 
-  if (img == NULL)
-  {
-    //fprintf (stderr, "couldn't open image file: %s\n", argv[1]);
-    return NULL;
-  }
+    img = cvLoadImage(image, CV_LOAD_IMAGE_GRAYSCALE);
+
+    if (img == NULL)
+    {
+        //fprintf (stderr, "couldn't open image file: %s\n", argv[1]);
+        return NULL;
+    }
 
     // call fonction to detection         ;
     int *lines_number=malloc(sizeof(int));
     int **ptr_line = &lines_number;
     int size_lines_number = detect_line(img,lines_number,ptr_line);
-   
-    
+
+
     // rect of all the chars
     struct rect_char *chars= malloc(sizeof(struct rect_char));
     struct rect_char **ptr_rect = &chars;
     int size_rect_char =detect_char(img,lines_number,size_lines_number,chars
-    ,ptr_rect);
-    
+            ,ptr_rect);
+
     color(img,lines_number,chars,size_lines_number,size_rect_char);
     printf("Detection char OK. \n");
     printf("Number of line : %i \n", size_lines_number/2);
     printf("Number of char : %i \n", size_rect_char);
 
-     free(lines_number);
-     free(chars);
+    free(lines_number);
+    free(chars);
 
 
     return img;
@@ -64,7 +63,8 @@ double compare(IplImage *img1, IplImage *img2)
     {
         for(int j = 0; j < img1->height; j++)
         {
-            if (CV_IMAGE_ELEM(img1, uchar, j, i) == CV_IMAGE_ELEM(newImage, uchar, j, i))
+            if (CV_IMAGE_ELEM(img1, uchar, j, i) == CV_IMAGE_ELEM(newImage, 
+                        uchar, j, i))
             {
                 n++;
             }

@@ -2,9 +2,8 @@
 #define _NEURONAL_NETWORK_H_
 #include <stdio.h>
 #include <stdlib.h>
-//#define netral_network struct neuron*
 
-//struct neuron;
+//struct neuron
 
 enum neuron_type
 {
@@ -30,9 +29,9 @@ struct neural_network
     unsigned neuronPerLayer;
 };
 
-struct neural_network *createNetwork(unsigned layerCount, unsigned inputCount, unsigned neuronCount);
+struct neural_network *createNetwork(unsigned layerCount, unsigned inputCount,
+        unsigned neuronCount);
 double getOutput(struct neural_network *network);
-void displayWeights(struct neuron *network);
 void resetWeights(struct neural_network *network);
 void freeNetwork(struct neural_network *network);
 void resetNetwork(struct neural_network *network);
