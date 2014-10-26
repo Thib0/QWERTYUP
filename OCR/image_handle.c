@@ -25,28 +25,18 @@ IplImage* load(char* image)
     int **ptr_line = &lines_number;
     int size_lines_number = detect_line(img,lines_number,ptr_line);
    
-   printf("jeajea test"); 
+    
     // rect of all the chars
     struct rect_char *chars= malloc(sizeof(struct rect_char));
     struct rect_char **ptr_rect = &chars;
     int size_rect_char =detect_char(img,lines_number,size_lines_number,chars
     ,ptr_rect);
     
-    for (int i = 0 ; i < size_lines_number; i++)
-	color_line(img,lines_number[i]);
-   
-    for (int j = 0 ; j <size_rect_char ; j++)
-    {
-	
-	color_column(img,chars[j]);
-    }
+    color(img,lines_number,chars,size_lines_number,size_rect_char);
+    printf("Detection char OK. \n");
+    printf("Number of line : %i \n", size_lines_number/2);
+    printf("Number of char : %i \n", size_rect_char);
 
-    printf("nbr ligne : %i",size_lines_number);
-   printf("nbr char : %i", size_rect_char);
-
-    if (size_rect_char != 0)
-      printf("success\n");
-    
      free(lines_number);
      free(chars);
 

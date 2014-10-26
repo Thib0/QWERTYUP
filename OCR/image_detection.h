@@ -22,4 +22,6 @@ int column_value(int y1, int y2,int x, IplImage *img);
 int color_column(IplImage *img,struct rect_char chars);
 struct rect_char* realloc_r(struct rect_char ** ptr, size_t taille);
 int * realloc_l(int ** ptr, size_t taille);
+int color(IplImage *img,int *lines_number, struct rect_char *chars,
+                int size_l,int size_c);
 #endif

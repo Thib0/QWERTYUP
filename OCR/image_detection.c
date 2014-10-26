@@ -78,7 +78,7 @@ int detect_char (IplImage *img,int *lines_number,int line_numbers_size,
   int white = 0;
   int first_char = 0;
   
-  int i,x,x1,x2,x3,mem_x1,mem_x2,c=0;
+  int i,x,x1,x2,x3,mem_x1,mem_x2,c=0,white_ref;
 
   for (i=0;i< line_numbers_size;i= i+2)
     {
@@ -86,6 +86,9 @@ int detect_char (IplImage *img,int *lines_number,int line_numbers_size,
       mem_x2 = -1;
       white = 0;
       first_char = 0;
+      white_ref = 0.18 * (lines_number[i+1]-lines_number[i]);
+      if (white_ref >10)
+        white_ref = 10;
 
       for(x=1 ; x < img->width-1; x++)
       {
@@ -106,32 +109,24 @@ int detect_char (IplImage *img,int *lines_number,int line_numbers_size,
 	{
 	  if (c != 0)
 	  	chars = realloc_r(ptr,(c+1)*sizeof(struct rect_char));
-	  if(chars == NULL)
-		  printf("chars = NUL\n");
-	 // printf("%i \n",c);
+	  
+	
 	  chars[c].y = lines_number[i];
 	  chars[c].x = mem_x1;
 	  chars[c].width = mem_x2 - mem_x1;
 	  chars[c].height = lines_number[i+1] - lines_number[i];
-	  color_column(img,chars [c]);
 	  c++;
 	  
 	  
-	  if (white > 6 && c>0 && first_char == 1 )
+	  if (white > white_ref && c>0 && first_char == 1 )
 	  {
 	    chars = realloc_r(ptr,(c+1)*sizeof(struct rect_char));
-	    if(chars == NULL)
-		    printf("chars = NULL\n");
 	    
-	   // printf("%i \n",c);
 	    chars[c].y = lines_number[i];
 	    chars[c].x = chars[c-2].x +chars[c - 2].width +2 ;
-	    chars[c].width = white -4;
+	    chars[c].width = white -3;
 	    chars[c].height = lines_number[i+1]-lines_number[i];
-	    color_column(img,chars[c]);
 	    c++;
-	    white = 0;
-
 	  }
 	  white =0;
 	  first_char = 1;
@@ -153,12 +148,10 @@ int detect_char (IplImage *img,int *lines_number,int line_numbers_size,
 	  mem_x1 = x;
 	}
 
-	//if (i == 2)
-	 // printf("white %i", white);
+
       }
     }
     
-    printf("nb rectangle %i ",c);
   return c;
 } 
 
@@ -208,3 +201,19 @@ struct rect_char* realloc_r(struct rect_char **ptr, size_t taille)
      return ptr_realloc;
 }
 
+int color(IplImage *img,int *lines_number, struct rect_char *chars, int
+size_l,int size_c)
+{
+
+    for (int i = 0 ; i < size_l; i++)
+	color_line(img,lines_number[i]);
+   
+    for (int j = 0 ; j <size_c ; j++)
+    {
+	
+	color_column(img,chars[j]);
+    }
+
+    return 0;
+
+}
