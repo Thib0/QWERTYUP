@@ -33,6 +33,7 @@ struct neural_network
 struct neural_network *createNetwork(unsigned layerCount, unsigned inputCount, unsigned neuronCount);
 double getOutput(struct neural_network *network);
 void displayWeights(struct neuron *network);
+void resetWeights(struct neural_network *network);
 void freeNetwork(struct neural_network *network);
 void resetNetwork(struct neural_network *network);
 void learn(struct neural_network *network, double res);

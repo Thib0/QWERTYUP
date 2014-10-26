@@ -22,29 +22,42 @@ int main (int argc, char* argv[])
        
         struct neural_network *network = createNetwork(3, 3, 2);
        
-        int loopCount = 0;
+        int loopCount = 0, count = 1, proceed = 0;
         double out00, out01, out10, out11;
         do
         {
-            loopCount++;
-            setInput(1,1, network);
-            out11 = getOutput(network);
-            learn(network, 0);
-            setInput(0,0, network);
-            out00 = getOutput(network);
-            learn(network, 0);
-            setInput(0,1,network);
-            out01 = getOutput(network);
-            learn(network, 1);
-            setInput(1,0, network);
-            out10 = getOutput(network);
-            learn(network, 1);
+             do
+            {
+                loopCount++;
+                setInput(1,1, network);
+                out11 = getOutput(network);
+                learn(network, 0);
+                setInput(0,0, network);
+                out00 = getOutput(network);
+                learn(network, 0);
+                setInput(0,1,network);
+                out01 = getOutput(network);
+                learn(network, 1);
+                setInput(1,0, network);
+                out10 = getOutput(network);
+                learn(network, 1);
 
-            printf("0xor0: %f 0xor1: %f 1xor0: %f 1xor1: %f\n", out00, out01, out10, out11);
-        }while ((out00 > 0.05 || out01 < 0.95 || out10 < 0.95 || out11 > 0.05) && loopCount < 200000);
+                printf("0xor0: %f 0xor1: %f 1xor0: %f 1xor1: %f iterations: %i\n", out00, out01, out10, out11, (count - 1)*200000+loopCount);
+            }while ((out00 > 0.05 || out01 < 0.95 || out10 < 0.95 || out11 > 0.05) && loopCount < 200000);
+            proceed = loopCount == 200000; 
+            if(proceed)
+            {
+                printf("creating new network\n");
+                resetWeights(network);
+                printf("weights reset");
+                count++;
+                loopCount = 0;
+            }   
+        }while(proceed);
+
 
         //freeNetwork(network);
-        printf("Loop count : %d\n",loopCount); 
+        printf("Loop count : %i\n",(count - 1)*200000 + loopCount); 
         _Exit(0);
     }
 

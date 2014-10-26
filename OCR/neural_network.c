@@ -16,14 +16,14 @@ double my_random()
     r *= rand();
     while(r > 1)
         r /= 10;
-    /*if (r > 0.43 && r < 0.63) {
+    if (r > 0.43 && r < 0.63) {
         int s = rand();
         while (s > 1) {
             s /= 10;
         }
         int sign = r < 0.5 ? -1 : 1;
         r += s*sign;
-    }*/
+    }
     return sign*r;
 }
 
@@ -126,12 +126,13 @@ void freeNetwork(struct neural_network *network)
            free((network->neurons[i][j]).w); 
         }
    }
-    for (unsigned i = 0 ; i < network->layerCount;i++)
+    /*for (unsigned i = 0 ; i < network->layerCount;i++)
    {
         free(network->neurons[i]);
-   }
+   }*/
    free(network->neurons);
    free(network);
+   network = NULL;
 }
 
 double sigmoide(double s)
@@ -215,5 +216,34 @@ void resetNetwork(struct neural_network *network)
     //Output
     network->neurons[network->layerCount-1][0].delta = 0;
     network->neurons[network->layerCount-1][0].input = 0;
+}
+
+void resetWeights(struct neural_network *network)
+{
+    //input layer
+    for(unsigned i = 0; i < network->inputCount; i++)
+    {
+        for(unsigned j = 0; j < network->neuronPerLayer; j++)
+        {
+            network->neurons[0][i].w[j] = my_random();
+        }
+    }
+    //hidden layers
+    for(unsigned i = 1; i < network->layerCount - 2; i++)
+    {
+        for(unsigned j = 0; j < network->neuronPerLayer; j++)
+        {
+            for(unsigned k = 0; k < network->neuronPerLayer; k++)
+            {
+                network->neurons[i][j].w[k] = my_random();
+            }
+        }
+    }
+    //last hidden layer
+    for(unsigned i = 0; i < network->neuronPerLayer; i++)
+    {
+        network->neurons[network->layerCount - 2][i].w[0] = my_random();
+    }
+
 }
 
