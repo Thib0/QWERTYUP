@@ -7,7 +7,7 @@
 
 IplImage* load(char* image)
 {
-    IplImage* img = NULL; 
+    IplImage* img = NULL;
 
     //int x,y;
 
@@ -19,7 +19,7 @@ IplImage* load(char* image)
         return NULL;
     }
 
-    // call fonction to detection         ;
+    // call fonction to detection
     int *lines_number=malloc(sizeof(int));
     int **ptr_line = &lines_number;
     int size_lines_number = detect_line(img,lines_number,ptr_line);
@@ -63,7 +63,7 @@ double compare(IplImage *img1, IplImage *img2)
     {
         for(int j = 0; j < img1->height; j++)
         {
-            if (CV_IMAGE_ELEM(img1, uchar, j, i) == CV_IMAGE_ELEM(newImage, 
+            if (CV_IMAGE_ELEM(img1, uchar, j, i) == CV_IMAGE_ELEM(newImage,
                         uchar, j, i))
             {
                 n++;

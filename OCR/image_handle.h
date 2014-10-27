@@ -5,7 +5,7 @@
 
 /*
    Loads an image at path with given path
-   by converting it to a perfect image. 
+   by converting it to a greyscale image.
    Returns NULL if image doesn't exist
    or couldn't be loaded. Returned image
    has only one component.

@@ -1,0 +1,10 @@
+To compile the project, use the following command from a terminal on the project’s folder:
+$make
+
+This last command will generate the binary files required as well as the executable. In order to run the program, use
+$./main [imagePath]
+
+where [imagePath] is an optional parameter indicating the path to an image file. If this parameter isn’t present, the program will run the neural network in order to learn the xor operation, else, it will show the image selected by putting it on greyscale and detecting character rectangles.
+
+Optionally, to remove the binaries and the executable, run
+$make clean

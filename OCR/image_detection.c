@@ -16,20 +16,20 @@ int detect_line(IplImage *img, int *lines_number,int **ptr )
     for (y=4; y<( img->height - 1);y++)
     {
         y0 = line_value(img,y-1);
-        y1 = line_value(img,y);  
-        y2 = line_value(img,y+ 1);             
+        y1 = line_value(img,y);
+        y2 = line_value(img,y+ 1);
 
         if ( y1==0 && y2==1)
         {
             if (size_lines_number != 0)
-                lines_number =realloc_l(ptr,(size_lines_number+1)*sizeof(int)) ;
+                lines_number =realloc_l(ptr,(size_lines_number+1)*sizeof(int));
 
             lines_number[size_lines_number] = y;
             size_lines_number ++;
         }
         else if (y1==0 && y0==1)
         {
-            lines_number =realloc_l(ptr,(size_lines_number+1)*sizeof(int))  ;
+            lines_number =realloc_l(ptr,(size_lines_number+1)*sizeof(int));
 
             lines_number[size_lines_number] = y;
             size_lines_number ++;
@@ -53,7 +53,7 @@ int line_value (IplImage *img,int y)
         {
             return 1;
         }
-    }                                                                 
+    }
     return 0;
 }
 
@@ -100,7 +100,7 @@ int detect_char (IplImage *img,int *lines_number,int line_numbers_size,
 
             if (x2 == 0 && x1 == 1)
             {
-                mem_x2=x;	
+                mem_x2=x;
             }
 
             if(mem_x2 != -1 && mem_x1 != -1)
@@ -121,7 +121,7 @@ int detect_char (IplImage *img,int *lines_number,int line_numbers_size,
                     chars = realloc_r(ptr,(c+1)*sizeof(struct rect_char));
 
                     chars[c].y = lines_number[i];
-                    chars[c].x = chars[c-2].x +chars[c - 2].width +2 ;
+                    chars[c].x = chars[c-2].x +chars[c - 2].width +2;
                     chars[c].width = white -3;
                     chars[c].height = lines_number[i+1]-lines_number[i];
                     c++;
@@ -138,7 +138,7 @@ int detect_char (IplImage *img,int *lines_number,int line_numbers_size,
 
             if( x1 == 0 && x2 ==0 && x3 ==0)
             {
-                white ++;	 
+                white ++;
             }
 
             if (x2 == 0 && x3 == 1 )
@@ -151,14 +151,14 @@ int detect_char (IplImage *img,int *lines_number,int line_numbers_size,
     }
 
     return c;
-} 
+}
 
 int column_value(int y1, int y2,int x, IplImage *img)
 {
     int i;
     for(i=y1 +1 ; i<y2;i++)
     {
-        // if black pixel return 1 
+        // if black pixel return 1
         if (CV_IMAGE_ELEM(img,uchar,i,x) < 50)
         {
             return 1;

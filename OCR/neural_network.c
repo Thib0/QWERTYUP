@@ -27,7 +27,7 @@ double my_random()
     return sign*r;
 }
 
-struct neural_network *createNetwork(unsigned layerCount, unsigned inputCount, 
+struct neural_network *createNetwork(unsigned layerCount, unsigned inputCount,
         unsigned neuronCount)
 {
     // allocs
@@ -101,7 +101,7 @@ double getOutput(struct neural_network *network)
     for (unsigned k = 1; k < network->layerCount - 2; k++) {
         for (unsigned i = 0; i < network->neuronPerLayer; i++) {
             for (unsigned j = 0; j < network->neuronPerLayer; j++) {
-                neurons[k+1][j].input += neurons[k][i].w[j] * 
+                neurons[k+1][j].input += neurons[k][i].w[j] *
                     sigmoide(neurons[k][i].input);
             }
         }
@@ -109,7 +109,7 @@ double getOutput(struct neural_network *network)
     // last hidden layer
     unsigned n = network->layerCount;
     for (unsigned i = 0; i < network->neuronPerLayer; i++) {
-        neurons[n - 1][0].input += neurons[n - 2][i].w[0] * 
+        neurons[n - 1][0].input += neurons[n - 2][i].w[0] *
             sigmoide(neurons[n - 2][i].input);
     }
 
@@ -126,7 +126,7 @@ void freeNetwork(struct neural_network *network)
     {
         for (unsigned j = 0; j < network->neuronPerLayer;j++)
         {
-            free((network->neurons[i][j]).w); 
+            free((network->neurons[i][j]).w);
         }
     }
     for (unsigned i = 0 ; i < network->layerCount-1;i++)
@@ -158,7 +158,7 @@ void learn(struct neural_network *network, double res)
         double in = sigmoide(network->neurons[n-2][i].input);
         double w = network->neurons[n-2][i].w[0];
         network->neurons[n-2][i].delta = in*(1-in)*
-            (w*network->neurons[n-1][0].delta); 
+            (w*network->neurons[n-1][0].delta);
     }
 
     //Hidden layers
@@ -179,9 +179,9 @@ void learn(struct neural_network *network, double res)
 
     }
     //Input maj w
-    for (unsigned i = 0; i < network->inputCount; i++) 
+    for (unsigned i = 0; i < network->inputCount; i++)
     {
-        for (unsigned j = 0; j < network->neuronPerLayer; j++) 
+        for (unsigned j = 0; j < network->neuronPerLayer; j++)
         {
             neurons[0][i].w[j] += alpha*sigmoide(neurons[0][i].input)*
                 neurons[1][j].delta;

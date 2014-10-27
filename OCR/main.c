@@ -42,12 +42,12 @@ int main (int argc, char* argv[])
                 out10 = getOutput(network);
                 learn(network, 1);
 
-                printf("0xor0: %f 0xor1: %f 1xor0: %f 1xor1: %f\n",out00, out01, 
+                printf("0xor0: %f 0xor1: %f 1xor0: %f 1xor1: %f\n",out00, out01,
                         out10, out11);
 
             }while ((out00 > 0.05 || out01 < 0.95 || out10 < 0.95 ||
                         out11 > 0.05) && loopCount < 200000);
-            proceed = loopCount == 200000; 
+            proceed = loopCount == 200000;
             if(proceed)
             {
                 printf("creating new network\n");
@@ -55,13 +55,13 @@ int main (int argc, char* argv[])
                 printf("weights reset");
                 count++;
                 loopCount = 0;
-            }   
+            }
         }while(proceed);
 
 
         freeNetwork(network);
         printf("Network freed.\n");
-        printf("Loop count : %i\n",(count - 1)*200000 + loopCount); 
+        printf("Loop count : %i\n",(count - 1)*200000 + loopCount);
         printf("Everything went fine. Exiting...\n");
         _Exit(0);
     }
@@ -88,7 +88,7 @@ int main (int argc, char* argv[])
             return -1;
         }
     }
-    else 
+    else
     {
         printf("Argument issue. Exiting...\n");
         return -1;

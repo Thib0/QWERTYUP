@@ -8,11 +8,11 @@ LDFLAGS=`pkg-config --libs opencv` -lm
 SRC= main.c image_handle.c image_detection.c neural_network.c
 OBJ= ${SRC:.c=.o}
 
-all: main clean
+all: main
 
 main: ${OBJ}
 
 clean:
-	rm -f *~ *.o
+	rm -f *~ *.o main
 
 #END
