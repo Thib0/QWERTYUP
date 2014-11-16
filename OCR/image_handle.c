@@ -4,6 +4,7 @@
 #include "opencv/cv.h"
 #include "image_handle.h"
 #include "image_detection.h"
+#include "image_treatment.h"
 
 IplImage* load(char* image)
 {
@@ -11,7 +12,7 @@ IplImage* load(char* image)
 
     //int x,y;
 
-    img = cvLoadImage(image, CV_LOAD_IMAGE_GRAYSCALE);
+    img = cvLoadImage(image, CV_LOAD_IMAGE_COLOR);
 
     if (img == NULL)
     {

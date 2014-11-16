@@ -4,6 +4,7 @@
 #include "opencv/cv.h"
 #include "image_handle.h"
 #include "image_detection.h"
+#include "image_treatment.h"
 
 struct rect_char * detect(IplImage *img)
 {
@@ -28,10 +29,10 @@ struct rect_char * detect(IplImage *img)
 		size_lines_number =
 		detect_line(img,lines_number,ptr_line,bloc[i],bloc[i+1],old_size_l);
 
-		size_rect_char =
-		detect_char(img,lines_number,size_lines_number,chars,ptr_rect,bloc[i],bloc[i+1],old_size_c);
+		size_rect_char = detect_char(img,lines_number,size_lines_number,chars,ptr_rect,bloc[i],bloc[i+1],old_size_c);
 	}
-
+	
+	printf("nb chars : %i\n",size_rect_char);
 	color(img,size_rect_char,chars);
 
 	free(lines_number);
@@ -77,7 +78,7 @@ int bloc_value(int x, IplImage *img)
 {
 	for (int y = 0 ; y <img->height;y++)
 	{
-		if (CV_IMAGE_ELEM(img,uchar,y,x) <50)
+		if (get_pixel(img,x,y,0) <50)
 			return 1;
 	
 	}
@@ -127,7 +128,7 @@ int line_value (IplImage *img,int y,int up, int low)
     for (x = up ; x <low; x++)
     {
         // if black pixel return 1
-        if (CV_IMAGE_ELEM(img,uchar,y,x) <50)
+        if (get_pixel(img,x,y,0) <50)
         {
             return 1;
         }
@@ -136,17 +137,7 @@ int line_value (IplImage *img,int y,int up, int low)
 }
 
 
-int color_line (IplImage *img, int y)
-{
-    int x;
-    for (x = 0 ; x < img->width; x++)
-    {
 
-        CV_IMAGE_ELEM(img,uchar,y,x)=128;
-    }
-
-    return 0;
-}
 
 int detect_char (IplImage *img,int *lines_number,int line_numbers_size,struct rect_char *chars,struct rect_char **ptr,int up,int low,int old_size_c)
 {
@@ -236,7 +227,7 @@ int column_value(int y1, int y2,int x, IplImage *img)
     for(i=y1 +1 ; i<y2;i++)
     {
         // if black pixel return 1
-        if (CV_IMAGE_ELEM(img,uchar,i,x) < 50)
+        if (get_pixel(img,x,i,0) < 50)
         {
             return 1;
 
@@ -246,16 +237,6 @@ int column_value(int y1, int y2,int x, IplImage *img)
     return 0;
 }
 
-int color_column(IplImage *img,struct rect_char chars)
-{
-    for (int y = chars.y ; y < chars.y + chars.height; y++)
-    {
-        CV_IMAGE_ELEM(img,uchar,y,chars.x) = 128;
-        CV_IMAGE_ELEM(img,uchar,y,chars.x+ chars.width) = 128;
-    }
-
-    return 0;
-}
 
 int* realloc_l(int **ptr, size_t taille)
 {
@@ -283,14 +264,14 @@ int color(IplImage *img,int size_c, struct rect_char *chars)
     {
 	for (int y = chars[i].y ; y < chars[i].y + chars[i].height ; y++)
 	{
-		CV_IMAGE_ELEM(img,uchar,y,chars[i].x) = 0;
-		CV_IMAGE_ELEM(img,uchar,y,chars[i].x + chars[i].width) = 0;
+		set_pixel(img,y,chars[i].x, 0);
+		set_pixel(img,y,chars[i].x + chars[i].width,0);
 	}
 	
 	for(int x = chars[i].x ; x < chars[i].x + chars[i].width; x++)
 	{
-		CV_IMAGE_ELEM(img,uchar,chars[i].y,x) = 0;
-		CV_IMAGE_ELEM(img,uchar,chars[i].y + chars[i].height,x) = 0;
+		set_pixel(img,chars[i].y,x,0);
+		set_pixel(img,chars[i].y + chars[i].height,x,0);
 
 	}
     
