@@ -3,6 +3,8 @@
 #include <time.h>
 #include "neural_network.h"
 #include <math.h>
+#include <unistd.h>
+#include <string.h>
 #define alpha 0.35
 
 double my_random()
@@ -255,3 +257,131 @@ void resetWeights(struct neural_network *network)
     }
 
 }
+
+
+int save(struct neural_network *network)
+{
+    FILE *f = fopen("save","w+");
+    if (!f || !network) {
+        fclose(f);
+        return -1;
+    }
+    struct neuron **neurons = network->neurons;
+    
+    fprintf(f, "%u %u %u\n", network->inputCount, network->layerCount, network->neuronPerLayer);
+    //inputs
+    for (int i = 0; i < network->inputCount; i++) {
+        fprintf(f, "[");
+        for (int j = 0; j < network->neuronPerLayer; j++) {
+            fprintf(f,"%f ",neurons[0][i].w[j]);
+        }
+        fprintf(f, "]");
+    }
+    fprintf(f, "\n");
+    
+    //hiddens
+    for (int i = 1; i < network->layerCount - 2; i++) {
+        for (int j = 0; j < network->neuronPerLayer; j++) {
+            fprintf(f, "[");
+            for (int k = 0; k < network->neuronPerLayer; k++) {
+                fprintf(f, "%f ", neurons[i][j].w[k]);
+            }
+            fprintf(f, "]");
+        }
+        fprintf(f,"\n");
+    }
+    //last hidden
+    for (int i = 0; i < network->neuronPerLayer; i++) {
+        fprintf(f, "[%f ]", neurons[network->layerCount - 2][i].w[0]);
+    }
+    char c = '\\';
+    fprintf(f, (const char *)&c);
+    fclose(f);
+    
+    printf("saved\n");
+    
+    return 1;
+}
+
+struct neural_network* loadNetwork()
+{
+    FILE *f = fopen("save", "r");
+    if (!f) {
+        fclose(f);
+        return NULL;
+    }
+    char c;
+    
+    int index = 0;
+    char **sizes = calloc(3, sizeof(int*));
+    int inputCount = 0, layerCount = 0, neuronPerLayer = 0;
+    
+    while (( c = fgetc(f) ) != '\n') {
+        if (c != ' ')
+        {
+            sizes[index] = realloc(sizes[index], sizeof(sizes[index]) + sizeof(char));
+            if (!sizes[index]) {
+                printf("lol\n");
+            }
+            char *c2 = malloc(sizeof(char)*2);
+            c2[0] = c;
+            c2[1] = '\0';
+            sizes[index] = strcat(sizes[index], (const char*)c2);
+            //free((void *)c2);
+        }
+        else
+        {
+            index++;
+        }
+    }
+    
+    struct neural_network *network = createNetwork(atoi(sizes[1]), atoi(sizes[0]), atoi(sizes[2]));
+    
+    int i = 0, j = 0, k = 0;
+    char *w = calloc(9, sizeof(char));
+    index = 0;
+    while( ( c = fgetc(f) ) != EOF && c != '\\')
+    {
+        switch (c) {
+            case  ' ':
+                network->neurons[i][j].w[k] = atof(w);
+                w = calloc(9, sizeof(char));
+                index = 0;
+                k++;
+                break;
+            case '[':
+                break;
+            case ']':
+                j++;
+                k = 0;
+                break;
+            case '\n':
+                i++;
+                j = 0;
+                break;
+            default:
+                w[index] = c;
+                index++;
+                break;
+        }
+    }
+    fclose(f);
+    return network;
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

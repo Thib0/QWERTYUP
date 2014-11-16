@@ -36,5 +36,7 @@ void resetWeights(struct neural_network *network);
 void freeNetwork(struct neural_network *network);
 void resetNetwork(struct neural_network *network);
 void learn(struct neural_network *network, double res);
+int  save(struct neural_network *network);
+struct neural_network* loadNetwork();
 double sigmoide(double s);
 #endif
