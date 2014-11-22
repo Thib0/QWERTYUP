@@ -16,14 +16,19 @@ void setInput(int a, int b, struct neural_network *network)
 
 int main (int argc, char* argv[])
 {
+    printf("omg\n");
+    
     if (argc == 1)
     {
         srand(time(NULL));
-
-        struct neural_network *network = createNetwork(3, 3, 2);
-
+        printf("wtf\n");
+        struct neural_network *network = createNetwork(3, 3, 2, 2);
+        printf("lawl\n");
         int loopCount = 0, count = 1, proceed = 0;
-        double out00, out01, out10, out11;
+        
+        double res[4][2] = {{1, 0}, {0,1}, {0,1}, {1,0}};
+        
+        double *out00, *out01, *out10, *out11;
             do
             {
                 do
@@ -31,22 +36,24 @@ int main (int argc, char* argv[])
                     loopCount++;
                     setInput(1,1, network);
                     out11 = getOutput(network);
-                    learn(network, 0);
+                    printf("output 1");
+                    learn(network, res[3]);
+                    printf("learn 1");
                     setInput(0,0, network);
                     out00 = getOutput(network);
-                    learn(network, 0);
+                    learn(network, res[0]);
                     setInput(0,1,network);
                     out01 = getOutput(network);
-                    learn(network, 1);
+                    learn(network, res[1]);
                     setInput(1,0, network);
                     out10 = getOutput(network);
-                    learn(network, 1);
+                    learn(network, res[2]);
                     
-                    printf("0xor0: %f 0xor1: %f 1xor0: %f 1xor1: %f\n",out00, out01,
-                           out10, out11);
+                    printf("0xor0: %f 0xor1: %f 1xor0: %f 1xor1: %f\n",out00[0], out01[1],
+                           out10[1], out11[0]);
                     
-                }while ((out00 > 0.05 || out01 < 0.95 || out10 < 0.95 ||
-                         out11 > 0.05) && loopCount < 200000);
+                }while ((out00[0] > 0.05 || out01[1] < 0.95 || out10[1] < 0.95 ||
+                         out11[0] > 0.05) && loopCount < 200000);
                 proceed = loopCount == 200000;
                 if(proceed)
                 {
@@ -65,8 +72,6 @@ int main (int argc, char* argv[])
         printf("Loop count : %i\n",(count - 1)*200000 + loopCount);
         printf("Everything went fine. Exiting...\n");*/
         
-        setInput(1,0,network);
-        printf("%f\n", getOutput(network));
         _Exit(0);
     }
 
@@ -97,5 +102,4 @@ int main (int argc, char* argv[])
         printf("Argument issue. Exiting...\n");
         return -1;
     }
-
 }
