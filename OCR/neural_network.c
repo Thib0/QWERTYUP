@@ -270,9 +270,9 @@ int save(struct neural_network *network)
     
     fprintf(f, "%u %u %u\n", network->inputCount, network->layerCount, network->neuronPerLayer);
     //inputs
-    for (int i = 0; i < network->inputCount; i++) {
+    for (unsigned i = 0; i < network->inputCount; i++) {
         fprintf(f, "[");
-        for (int j = 0; j < network->neuronPerLayer; j++) {
+        for (unsigned j = 0; j < network->neuronPerLayer; j++) {
             fprintf(f,"%f ",neurons[0][i].w[j]);
         }
         fprintf(f, "]");
@@ -280,10 +280,10 @@ int save(struct neural_network *network)
     fprintf(f, "\n");
     
     //hiddens
-    for (int i = 1; i < network->layerCount - 2; i++) {
-        for (int j = 0; j < network->neuronPerLayer; j++) {
+    for (unsigned i = 1; i < network->layerCount - 2; i++) {
+        for (unsigned j = 0; j < network->neuronPerLayer; j++) {
             fprintf(f, "[");
-            for (int k = 0; k < network->neuronPerLayer; k++) {
+            for (unsigned k = 0; k < network->neuronPerLayer; k++) {
                 fprintf(f, "%f ", neurons[i][j].w[k]);
             }
             fprintf(f, "]");
@@ -291,11 +291,11 @@ int save(struct neural_network *network)
         fprintf(f,"\n");
     }
     //last hidden
-    for (int i = 0; i < network->neuronPerLayer; i++) {
+    for (unsigned i = 0; i < network->neuronPerLayer; i++) {
         fprintf(f, "[%f ]", neurons[network->layerCount - 2][i].w[0]);
     }
     char c = '\\';
-    fprintf(f, (const char *)&c);
+    fprintf(f,"%s",(const char *)&c);
     fclose(f);
     
     printf("saved\n");
@@ -314,7 +314,7 @@ struct neural_network* loadNetwork()
     
     int index = 0;
     char **sizes = calloc(3, sizeof(int*));
-    int inputCount = 0, layerCount = 0, neuronPerLayer = 0;
+    //int inputCount = 0, layerCount = 0, neuronPerLayer = 0;
     
     while (( c = fgetc(f) ) != '\n') {
         if (c != ' ')
@@ -369,19 +369,3 @@ struct neural_network* loadNetwork()
     return network;
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
