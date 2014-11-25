@@ -21,7 +21,7 @@ double my_random()
     if (r > 0.43 && r < 0.63) {
         int s = rand();
         while (s > 1) {
-            s /= 10;
+            s /=10;
         }
         int sign = r < 0.5 ? -1 : 1;
         r += s*sign;
@@ -33,17 +33,17 @@ struct neural_network *createNetwork(unsigned layerCount, unsigned inputCount,
         unsigned neuronCount, unsigned outputCount)
 {
     // allocs
-    printf("lol");
+    printf("lol\n");
     struct neuron **layers = malloc(sizeof(struct neuron*) * layerCount);
-    printf("creating");
+    printf("creating\n");
     
     layers[0] = malloc(sizeof(struct neuron) * inputCount);
-    for (unsigned i = 1; i < layerCount - 1; i++) {
+    for (unsigned i = 1; i < layerCount - 2; i++) {
         layers[i] = malloc(sizeof(struct neuron) * neuronCount);
     }
-    printf("creating");
+    printf("creating\n");
     layers[layerCount - 1] = malloc(sizeof(struct neuron)*outputCount);
-    printf("creating");
+    printf("creating\n");
     // inits
     // input layer
     for (unsigned i = 0; i < inputCount; i++) {
@@ -69,33 +69,34 @@ struct neural_network *createNetwork(unsigned layerCount, unsigned inputCount,
             }
         }
     }
-    printf("last hidden");
+    printf("last hidden\n");
     // last hidden layer
-    for (unsigned i = 0; i < neuronCount; i++) {
+    for (unsigned i = 0; i < neuronCount && 0; i++) {
         layers[layerCount - 2][i].input = 0;
         layers[layerCount - 2][i].type = hidden;
         layers[layerCount - 2][i].connectionsCount = 1;
         layers[layerCount - 2][i].delta = 0;
         layers[layerCount - 2][i].w = malloc(sizeof(double)*outputCount);
-        for (int j = 0; j < outputCount; i++) {
-            layers[layerCount - 2][i].w[i] = my_random();
+        for (unsigned j = 0; j < outputCount; j++) {
+            layers[layerCount - 2][i].w[j]= my_random();
         }
         
     }
 
     // output layer
-    layers[layerCount - 1][1].input = 0;
-    layers[layerCount - 1][1].type = output;
-    layers[layerCount - 1][1].connectionsCount = 0;
-    layers[layerCount - 2][1].delta = 0;
-    layers[layerCount - 1][1].w = NULL;
-
+    for (unsigned k=0;k<outputCount;k++){
+    layers[layerCount - 1][k].input = 0;
+    layers[layerCount - 1][k].type = output;
+    layers[layerCount - 1][k].connectionsCount = 0;
+    layers[layerCount - 1][k].delta = 0;
+    layers[layerCount - 1][k].w = NULL;
+    }
     struct neural_network *new_network = malloc(sizeof(struct neural_network));
     new_network->neurons = layers;
     new_network->inputCount = inputCount;
     new_network->layerCount = layerCount;
     new_network->neuronPerLayer = neuronCount;
-    printf("created");
+    printf("created\n");
     return new_network;
 }
 

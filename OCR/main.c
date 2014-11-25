@@ -24,7 +24,7 @@ int main (int argc, char* argv[])
         printf("wtf\n");
         struct neural_network *network = createNetwork(3, 3, 2, 2);
         printf("lawl\n");
-        int loopCount = 0, count = 1, proceed = 0;
+        /*int loopCount = 0, count = 1, proceed = 0;
         
         double res[4][2] = {{1, 0}, {0,1}, {0,1}, {1,0}};
         
@@ -68,7 +68,7 @@ int main (int argc, char* argv[])
         save(network);
         freeNetwork(network);
         network = loadNetwork();
-        /*printf("Network freed.\n");
+        printf("Network freed.\n");
         printf("Loop count : %i\n",(count - 1)*200000 + loopCount);
         printf("Everything went fine. Exiting...\n");*/
         
