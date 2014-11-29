@@ -20,10 +20,15 @@ IplImage* load(char* image)
 	    return NULL;
     }
 
+    int mat[9] = {1,2,1,2,4,2,1,2,1};
+    matrix(img,mat,16);
+    gray_s(img);
+    binarization(img);
     struct rect_char *chars = detect(img);
     free(chars);
 
     return img;
+
 
 }
 
