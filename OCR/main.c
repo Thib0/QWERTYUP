@@ -5,7 +5,7 @@
 #include "image_handle.h"
 #include "neural_network.h"
 #include <time.h>
-
+#include "image_treatment.h"
 
 void setInput(int a, int b, struct neural_network *network)
 {
@@ -14,64 +14,61 @@ void setInput(int a, int b, struct neural_network *network)
     network->neurons[0][2].input = 1;
 }
 
+size_t max(double *out, size_t index)
+{
+    size_t max = 0;
+    for (size_t i = 0; i < 128; i++) {
+        if (out[i] > out[max] && i != index) {
+            max = i;
+        }
+    }
+    return max;
+}
+
+void setImageInput(struct neural_network *network, IplImage *img)
+{
+    for (int i = 0; i < img->width; i++) {
+        for (int j = 0; j < img->height; j++) {
+            network->neurons[0][j*img->height + i].input = CV_IMAGE_ELEM(img, uchar, j, i)/255;
+        }
+    }
+}
+
 int main (int argc, char* argv[])
 {
-    printf("omg\n");
     
     if (argc == 1)
     {
         srand(time(NULL));
-        printf("wtf\n");
-        struct neural_network *network = createNetwork(3, 3, 2, 2);
-        printf("lawl\n");
-        /*int loopCount = 0, count = 1, proceed = 0;
+        struct neural_network *network = createNetwork(3, 20*20, 20*20*1.5, 128);
+        IplImage *a = load("chars/a.png");
+        IplImage *b = load("chars/b.png");
         
-        double res[4][2] = {{1, 0}, {0,1}, {0,1}, {1,0}};
+        double *out = malloc(1);
+        size_t m;
+        for (int i = 0; i < 100; i++) {
+            setImageInput(network, a);
+            do {
+                out = getOutput(network);
+                learn(network, 'a');
+                m = max(out, 'a');
+            } while (out['a'] < 0.7 || out[m] > 0.6);
+            printf("a done\n");
+            setImageInput(network, b);
+            do {
+                out = getOutput(network);
+                learn(network, 'b');
+            } while (out['b'] < 0.7 || out[m] > 0.6);
+            printf("%i\n", i);
+        }
+
         
-        double *out00, *out01, *out10, *out11;
-            do
-            {
-                do
-                {
-                    loopCount++;
-                    setInput(1,1, network);
-                    out11 = getOutput(network);
-                    printf("output 1");
-                    learn(network, res[3]);
-                    printf("learn 1");
-                    setInput(0,0, network);
-                    out00 = getOutput(network);
-                    learn(network, res[0]);
-                    setInput(0,1,network);
-                    out01 = getOutput(network);
-                    learn(network, res[1]);
-                    setInput(1,0, network);
-                    out10 = getOutput(network);
-                    learn(network, res[2]);
-                    
-                    printf("0xor0: %f 0xor1: %f 1xor0: %f 1xor1: %f\n",out00[0], out01[1],
-                           out10[1], out11[0]);
-                    
-                }while ((out00[0] > 0.05 || out01[1] < 0.95 || out10[1] < 0.95 ||
-                         out11[0] > 0.05) && loopCount < 200000);
-                proceed = loopCount == 200000;
-                if(proceed)
-                {
-                    //printf("creating new network\n");
-                    resetWeights(network);
-                    //printf("weights reset");
-                    count++;
-                    loopCount = 0;
-                }
-            }while(proceed);
-        
+        setImageInput(network, a);
+        out = getOutput(network);
+        for (int i = 0; i < 128; i++) {
+            printf("%c: %f\n", (char)i, out[i]);
+        }
         save(network);
-        freeNetwork(network);
-        network = loadNetwork();
-        printf("Network freed.\n");
-        printf("Loop count : %i\n",(count - 1)*200000 + loopCount);
-        printf("Everything went fine. Exiting...\n");*/
-        
         _Exit(0);
     }
 
@@ -103,3 +100,57 @@ int main (int argc, char* argv[])
         return -1;
     }
 }
+/*
+void xor()
+{
+    printf("wtf\n");
+    struct neural_network *network = createNetwork(3, 3, 2, 2);
+    printf("lawl\n");
+    int loopCount = 0, count = 1, proceed = 0;
+    
+    double res[4][2] = {{1, 0}, {0,1}, {0,1}, {1,0}};
+    
+    double *out00, *out01, *out10, *out11;
+    do
+    {
+        do
+        {
+            loopCount++;
+            setInput(1,1, network);
+            out11 = getOutput(network);
+            printf("output 1");
+            learn(network, res[3]);
+            printf("learn 1");
+            setInput(0,0, network);
+            out00 = getOutput(network);
+            learn(network, res[0]);
+            setInput(0,1,network);
+            out01 = getOutput(network);
+            learn(network, res[1]);
+            setInput(1,0, network);
+            out10 = getOutput(network);
+            learn(network, res[2]);
+            
+            printf("0xor0: %f 0xor1: %f 1xor0: %f 1xor1: %f\n",out00[0], out01[1],
+                   out10[1], out11[0]);
+            
+        }while ((out00[0] > 0.05 || out01[1] < 0.95 || out10[1] < 0.95 ||
+                 out11[0] > 0.05) && loopCount < 200000);
+        proceed = loopCount == 200000;
+        if(proceed)
+        {
+            //printf("creating new network\n");
+            resetWeights(network);
+            //printf("weights reset");
+            count++;
+            loopCount = 0;
+        }
+    }while(proceed);
+    
+    save(network);
+    freeNetwork(network);
+    network = loadNetwork();
+    printf("Network freed.\n");
+    printf("Loop count : %i\n",(count - 1)*200000 + loopCount);
+    printf("Everything went fine. Exiting...\n");
+}*/

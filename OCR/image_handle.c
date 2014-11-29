@@ -27,8 +27,6 @@ IplImage* load(char* image)
     matrix(img,mat,16);
     gray_s(img);
     binarization(img);
-    struct rect_char *chars = detect(img);
-    free(chars);
 
     return img;
 

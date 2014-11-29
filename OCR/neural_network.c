@@ -5,7 +5,7 @@
 #include <math.h>
 #include <unistd.h>
 #include <string.h>
-#define alpha 0.35
+
 
 double my_random()
 {
@@ -26,6 +26,9 @@ double my_random()
         int sign = r < 0.5 ? -1 : 1;
         r += s*sign;
     }
+    if (sign*r > 0.63 && sign*r < 0.67) {
+        return my_random();
+    }
     return sign*r;
 }
 
@@ -33,17 +36,13 @@ struct neural_network *createNetwork(unsigned layerCount, unsigned inputCount,
         unsigned neuronCount, unsigned outputCount)
 {
     // allocs
-    printf("lol\n");
     struct neuron **layers = malloc(sizeof(struct neuron*) * layerCount);
-    printf("creating\n");
     
     layers[0] = malloc(sizeof(struct neuron) * inputCount);
-    for (unsigned i = 1; i < layerCount - 2; i++) {
+    for (unsigned i = 1; i < layerCount - 1; i++) {
         layers[i] = malloc(sizeof(struct neuron) * neuronCount);
     }
-    printf("creating\n");
     layers[layerCount - 1] = malloc(sizeof(struct neuron)*outputCount);
-    printf("creating\n");
     // inits
     // input layer
     for (unsigned i = 0; i < inputCount; i++) {
@@ -69,9 +68,8 @@ struct neural_network *createNetwork(unsigned layerCount, unsigned inputCount,
             }
         }
     }
-    printf("last hidden\n");
     // last hidden layer
-    for (unsigned i = 0; i < neuronCount && 0; i++) {
+    for (unsigned i = 0; i < neuronCount; i++) {
         layers[layerCount - 2][i].input = 0;
         layers[layerCount - 2][i].type = hidden;
         layers[layerCount - 2][i].connectionsCount = 1;
@@ -84,19 +82,19 @@ struct neural_network *createNetwork(unsigned layerCount, unsigned inputCount,
     }
 
     // output layer
-    for (unsigned k=0;k<outputCount;k++){
-    layers[layerCount - 1][k].input = 0;
-    layers[layerCount - 1][k].type = output;
-    layers[layerCount - 1][k].connectionsCount = 0;
-    layers[layerCount - 1][k].delta = 0;
-    layers[layerCount - 1][k].w = NULL;
+    for (unsigned k=0; k < outputCount; k++){
+        layers[layerCount - 1][k].input = 0;
+        layers[layerCount - 1][k].type = output;
+        layers[layerCount - 1][k].connectionsCount = 0;
+        layers[layerCount - 1][k].delta = 0;
+        layers[layerCount - 1][k].w = NULL;
     }
     struct neural_network *new_network = malloc(sizeof(struct neural_network));
     new_network->neurons = layers;
     new_network->inputCount = inputCount;
     new_network->layerCount = layerCount;
     new_network->neuronPerLayer = neuronCount;
-    printf("created\n");
+    new_network->outputCount = outputCount;
     return new_network;
 }
 
@@ -118,7 +116,7 @@ double *getOutput(struct neural_network *network)
         }
     }
     // last hidden layer
-    printf("last hidden");
+    //printf("last hidden");
     unsigned n = network->layerCount;
     for (unsigned i = 0; i < network->neuronPerLayer; i++) {
         for (unsigned j = 0; j < network->outputCount; j++) {
@@ -161,27 +159,29 @@ void freeNetwork(struct neural_network *network)
 
 double sigmoide(double s)
 {
+    //return 1 - exp(-0.5*s*s);
     return 1 / (1 + exp(-s));
 }
 
-void learn(struct neural_network *network, double *res)
+void learn2(struct neural_network *network, size_t index)
 {
     //Output
     unsigned n = network->layerCount;
     for (int i = 0; i < network->outputCount; i++) {
-        network->neurons[n-1][i].delta = res[i] -
-        sigmoide(network->neurons[n - 1][0].input);
+        network->neurons[n-1][i].delta = (i == index ? 1 : 0) -
+        sigmoide(network->neurons[n - 1][i].input);
     }
     
 
     //Last hidden Layer
-    for (unsigned i = 0; i < network->neuronPerLayer;i++)
+    for (unsigned i = 0; i < network->neuronPerLayer; i++)
     {
-        for (unsigned j = 0; j < network->outputCount; j++) {
+        for (unsigned j = 0; j < network->outputCount; j++)
+        {
             double in = sigmoide(network->neurons[n-2][i].input);
-            double w = network->neurons[n-2][i].w[j];
-            network->neurons[n-2][i].delta = in*(1-in)*
-            (w*network->neurons[n-1][j].delta);
+            double w = network->neurons[n - 2][i].w[j];
+            network->neurons[n - 2][i].delta = in*(1 - in)*
+            (w*network->neurons[n - 1][j].delta);
         }
         
     }
@@ -189,7 +189,7 @@ void learn(struct neural_network *network, double *res)
     //Hidden layers
     struct neuron **neurons = network->neurons;
 
-    for (int i = n-3 ; i > 0 ; i--)
+    for (unsigned i = n - 3 ; i > 0 ; i--)
     {
         for (unsigned j = 0; j < network->neuronPerLayer;j++)
         {
@@ -228,13 +228,86 @@ void learn(struct neural_network *network, double *res)
     //Last hidden layer
     for (unsigned j = 0; j < network->neuronPerLayer;j++)
     {
-        for (unsigned i = 0; i < network->outputCount; i++) {
+        for (unsigned i = 0; i < network->outputCount; i++)
+        {
             neurons[n-2][j].w[i] += alpha*sigmoide(neurons[n-2][j].input)*
             neurons[n-1][i].delta;
         }
-        
     }
 
+    resetNetwork(network);
+}
+
+void learn(struct neural_network *network, size_t index)
+{
+    struct neuron **layers = network->neurons;
+    unsigned n = network->layerCount;
+    /*
+        Delta Computation
+    */
+    
+    // Outputs
+    for (unsigned i = 0; i < network->outputCount; i++)
+    {
+        double in = sigmoide(layers[n - 1][i].input);
+        layers[n - 1][i].delta = in*(1-in)*((i == index ? 1 : 0) - sigmoide(layers[n - 1][i].input));
+        //layers[n - 1][i].delta *= in * (1 - in);
+    }
+    // Last Hidden
+    for (unsigned i = 0; i < network->neuronPerLayer; i++) {
+        for (unsigned k = 0; k < network->outputCount; k++) {
+            // sum
+            double sum = 0;
+            for (unsigned l = 0; l < network->outputCount; l++) {
+                sum += layers[n - 2][i].w[l] * layers[n - 1][l].delta;
+            }
+            double in = sigmoide(layers[n - 2][i].input);
+            layers[n - 2][i].delta = in*(1 - in)*sum;
+        }
+    }
+    
+    // Hiddens
+    for (unsigned i = 1; i < network->layerCount - 2; i++)
+    {
+        for (unsigned j = 0; j < network->neuronPerLayer; j++) {
+            for (unsigned k = 0; k < network->neuronPerLayer; k++) {
+                // sum
+                double sum = 0;
+                for (unsigned l = 0; l < network->neuronPerLayer; l++) {
+                    sum += layers[i][j].w[l] * layers[i + 1][l].delta;
+                }
+                double in = sigmoide(layers[i][j].input);
+                layers[i][j].delta = in*(1 - in)*sum;
+            }
+        }
+    }
+    
+    /*
+        Retropropagation
+    */
+    
+    // Inputs
+    for (unsigned i = 0; i < network->inputCount; i++) {
+        for (unsigned j = 0; j < network->neuronPerLayer; j++) {
+            layers[0][i].w[j] += alpha * sigmoide(layers[0][i].input) * layers[1][j].delta;
+        }
+    }
+    
+    // Hidden layers
+    for (unsigned i = 1; i < network->layerCount - 2; i++) {
+        for (unsigned j = 0; j < network->neuronPerLayer; j++) {
+            for (unsigned k = 0; k < network->neuronPerLayer; k++) {
+                layers[i][j].w[k] += alpha * sigmoide(layers[i][j].input) * layers[i + 1][k].delta;
+            }
+        }
+    }
+    
+    // last hidden
+    for (unsigned i = 0; i < network->neuronPerLayer; i++) {
+        for (unsigned j = 0; j < network->outputCount; j++) {
+            layers[n - 2][i].w[j] += alpha * sigmoide(layers[n - 2][i].input) * layers[n - 1][j].delta;
+        }
+    }
     resetNetwork(network);
 }
 
@@ -323,22 +396,16 @@ int save(struct neural_network *network)
         fprintf(f,"\n");
     }
     //last hidden
-    for (unsigned i = 0; i < network->neuronPerLayer; i++)
-        fprintf(f, "[%f ]", neurons[network->layerCount - 2][i].w[0]);
-
-    for (int i = 0; i < network->neuronPerLayer; i++) {
+    for (unsigned i = 0; i < network->neuronPerLayer; i++) {
         fprintf(f, "[");
         for (unsigned j = 0; j < network->outputCount; j++) {
             fprintf(f, "%f ", neurons[network->layerCount - 2][i].w[j]);
         }
         fprintf(f, "]");
-        
     }
     char c = '\\';
     fprintf(f,"%s",(const char *)&c);
     fclose(f);
-    
-    printf("saved\n");
     
     return 1;
 }
@@ -354,16 +421,13 @@ struct neural_network* loadNetwork()
     
     int index = 0;
     char **sizes = calloc(4, sizeof(int*));
-    int inputCount = 0, layerCount = 0, neuronPerLayer = 0;
+    //int inputCount = 0, layerCount = 0, neuronPerLayer = 0;
 
     
     while (( c = fgetc(f) ) != '\n') {
         if (c != ' ')
         {
             sizes[index] = realloc(sizes[index], sizeof(sizes[index]) + sizeof(char));
-            if (!sizes[index]) {
-                printf("lol\n");
-            }
             char *c2 = malloc(sizeof(char)*2);
             c2[0] = c;
             c2[1] = '\0';

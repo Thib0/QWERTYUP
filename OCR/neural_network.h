@@ -2,6 +2,7 @@
 #define _NEURONAL_NETWORK_H_
 #include <stdio.h>
 #include <stdlib.h>
+#define alpha 0.5
 
 //struct neuron
 
@@ -36,7 +37,7 @@ double *getOutput(struct neural_network *network);
 void resetWeights(struct neural_network *network);
 void freeNetwork(struct neural_network *network);
 void resetNetwork(struct neural_network *network);
-void learn(struct neural_network *network, double *res);
+void learn(struct neural_network *network, size_t index);
 int  save(struct neural_network *network);
 struct neural_network* loadNetwork();
 double sigmoide(double s);
