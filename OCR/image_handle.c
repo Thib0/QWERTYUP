@@ -20,7 +20,9 @@ IplImage* load(char* image)
 	    //fprintf (stderr, "couldn't open image file: %s\n", argv[1]);
 	    return NULL;
     }
-
+	
+    gray_s(img);
+    binarization(img);
     int mat[9] = {1,2,1,2,4,2,1,2,1};
     matrix(img,mat,16);
     gray_s(img);

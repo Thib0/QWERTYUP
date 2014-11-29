@@ -35,7 +35,7 @@ struct rect_char * detect(IplImage *img)
 	}
 	
 	printf("nb chars : %i\n",size_rect_char);
-	//color(img,size_rect_char,chars);
+	color(img,size_rect_char,chars);
 
 	free(lines_number);
 	return chars;
