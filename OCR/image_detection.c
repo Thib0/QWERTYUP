@@ -8,7 +8,7 @@
 
 struct rect_char * detect(IplImage *img)
 {
-	printf("test");
+	
 	
 	struct rect_char *chars = malloc(sizeof(struct rect_char));
 	int *lines_number = malloc(sizeof(int));
@@ -35,7 +35,7 @@ struct rect_char * detect(IplImage *img)
 	}
 	
 	printf("nb chars : %i\n",size_rect_char);
-	color(img,size_rect_char,chars);
+	//color(img,size_rect_char,chars);
 
 	free(lines_number);
 	return chars;
@@ -55,17 +55,16 @@ int detect_bloc(IplImage *img, int *bloc,int **ptr)
 		//printf("x1 : %i ; x2 %i , x3 %i \n",x1,x2,x3);
 		if (x2 == 0 && x1 == 1)
 		{
-			printf("%i\n",x);
 			bloc[nb_bloc] = x;
 			nb_bloc++;
 		}
 		else if (x2 == 0 && x3 == 1)
 		{
-			printf("detect bloc %i\n",x);
+			
 			if (nb_bloc !=0)
-			bloc = realloc_l(ptr,sizeof(int)*(nb_bloc + 2));
+				bloc = realloc_l(ptr,sizeof(int)*(nb_bloc + 2));
 			bloc[nb_bloc] = x;
-			printf("good realloc \n");
+			
 			nb_bloc++;
 		}
 

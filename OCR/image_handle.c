@@ -5,6 +5,7 @@
 #include "image_handle.h"
 #include "image_detection.h"
 #include "image_treatment.h"
+#include "char_treatment.h"
 
 IplImage* load(char* image)
 {
