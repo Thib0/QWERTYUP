@@ -2,7 +2,7 @@
 #define _NEURONAL_NETWORK_H_
 #include <stdio.h>
 #include <stdlib.h>
-#define alpha 0.5
+#define alpha 0.35
 
 //struct neuron
 
@@ -41,4 +41,5 @@ void learn(struct neural_network *network, size_t index);
 int  save(struct neural_network *network);
 struct neural_network* loadNetwork();
 double sigmoide(double s);
+double my_random();
 #endif

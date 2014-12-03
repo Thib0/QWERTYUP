@@ -26,9 +26,9 @@ double my_random()
         int sign = r < 0.5 ? -1 : 1;
         r += s*sign;
     }
-    if (sign*r > 0.63 && sign*r < 0.67) {
+    /*if (sign*r > 0.63 && sign*r < 0.67) {
         return my_random();
-    }
+    }*/
     return sign*r;
 }
 
@@ -159,6 +159,7 @@ void freeNetwork(struct neural_network *network)
 
 double sigmoide(double s)
 {
+    //return tanh(0.01*s);
     //return 1 - exp(-0.5*s*s);
     return 1 / (1 + exp(-s));
 }
@@ -250,7 +251,7 @@ void learn(struct neural_network *network, size_t index)
     for (unsigned i = 0; i < network->outputCount; i++)
     {
         double in = sigmoide(layers[n - 1][i].input);
-        layers[n - 1][i].delta = in*(1-in)*((i == index ? 1 : 0) - sigmoide(layers[n - 1][i].input));
+        layers[n - 1][i].delta = ((i == index ? 1 : 0) - sigmoide(layers[n - 1][i].input));
         //layers[n - 1][i].delta *= in * (1 - in);
     }
     // Last Hidden
