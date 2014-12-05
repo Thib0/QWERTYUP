@@ -69,6 +69,9 @@ neural_network *createNetwork(unsigned nLayers, int *layersize, double beta, dou
 
 void freeNetwork(neural_network *nn)
 {
+    if (!nn)
+        return;
+    
     int i;
     for(i=0; i<nn->nLayers; i++)
         free(nn->output[i]);
@@ -187,3 +190,162 @@ double evalError(neural_network *nn, double *desired)
     }
     return error / 2;
 }
+
+int saveNetwork(neural_network *network)
+{
+    FILE *f = fopen("save/values", "w+");
+    if (!f)
+        return 0;
+    
+    fprintf(f, "%i\n", network->nLayers); // nLayers
+    for (int i = 0; i < network->nLayers; i++)
+        fprintf(f, "%i\n", network->layersize[i]); // layersize
+    fprintf(f, "%f\n", network->beta); // beta
+    fprintf(f, "%f\n", network->alpha); // alpha
+    fclose(f);
+    
+    /*
+     //  Weights
+     */
+    
+    f = fopen("save/weight", "w+");
+    if (!f)
+        return 0;
+
+    
+    for (int i = 1; i < network->nLayers; i++) {
+        for (int j = 0; j < network->layersize[i]; j++) {
+            fprintf(f, "[");
+            for (int k = 0; k < network->layersize[i-1] + 1; k++) {
+                fprintf(f, "%f ", network->weight[i][j][k]);
+            }
+            fprintf(f, "]");
+        }
+        fprintf(f, "\n");
+    }
+    fprintf(f,"\\");
+    fclose(f);
+    
+    return 1;
+}
+
+neural_network *loadNetwork()
+{
+    FILE *f = fopen("save/values", "r");
+    if (!f)
+        return NULL;
+    char *nLayers = calloc(2, sizeof(char));
+    char c;
+    for (int i = 0, c = fgetc(f); c != '\n' && c != EOF; i++, c = fgetc(f)) {
+        nLayers[i] = c;
+    }
+    
+    printf("nLayers loaded\n");
+    
+    char **layersize = calloc(atoi(nLayers), sizeof(char *));
+    
+    for (int i = 0; i < atoi(nLayers); i++) {
+        layersize[i] = calloc(4, sizeof(char));
+    }
+    
+    int n = 0;
+    int i = 0;
+    while (n < atoi(nLayers)) {
+        c = fgetc(f);
+        if(c == '\n')
+        {
+            i = 0;
+            n++;
+        }
+        else
+        {
+            layersize[n][i] = c;
+            i++;
+        }
+    }
+    
+    printf("layersize: ");
+    
+    for (int i = 0; i < atoi(nLayers); i++) {
+        printf("%i ",atoi(layersize[i]));
+    }
+
+    
+    printf("layersize loaded\n");
+    
+    char *beta = calloc(9, sizeof(char));
+    for (int i = 0, c = fgetc(f); c != '\n'; c = fgetc(f), i++) {
+        beta[i] = c;
+    }
+    
+    printf("beta loaded\n");
+    
+    char *alpha = calloc(9, sizeof(char));
+    for (int i = 0, c = fgetc(f); c != '\n'; c = fgetc(f), i++) {
+        alpha[i] = c;
+    }
+    
+    printf("alpha loaded\n");
+    
+    int *layersizei = malloc(sizeof(int) * atoi(nLayers));
+    
+    for (int i = 0; i < atoi(nLayers); i++) {
+        layersizei[i] = atoi(layersize[i]);
+        printf("%i ", layersizei[i]);
+    }
+    
+    printf("layersize converted\n");
+    
+    
+    fclose(f);
+    
+    neural_network *network = createNetwork(atoi(nLayers), layersizei, atof(beta), atof(alpha));
+    
+    f = fopen("save/weight", "r");
+    
+    if (!f)
+        return NULL;
+    
+    
+    
+    int  j = 0, k = 0, index = 0;
+    i = 1;
+    char *w = calloc(9, sizeof(char));
+
+    while( ( c = fgetc(f) ) != EOF && c != '\\')
+    {
+        switch (c) {
+            case  ' ':
+                network->weight[i][j][k] = atof(w);
+                free(w);
+                w = calloc(9, sizeof(char));
+                index = 0;
+                k++;
+                break;
+            case '[':
+                break;
+            case ']':
+                j++;
+                k = 0;
+                break;
+            case '\n':
+                i++;
+                j = 0;
+                break;
+            default:
+                w[index] = c;
+                index++;
+                break;
+        }
+    }
+    
+    return network;
+    
+}
+
+
+
+
+
+
+
