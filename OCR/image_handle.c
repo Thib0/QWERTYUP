@@ -20,17 +20,36 @@ IplImage* load(char* image)
 	    //fprintf (stderr, "couldn't open image file: %s\n", argv[1]);
 	    return NULL;
     }
-	
-    gray_s(img);
-    binarization(img);
-    int mat[9] = {1,2,1,2,4,2,1,2,1};
-    matrix(img,mat,16);
-    gray_s(img);
-    binarization(img);
 
     return img;
 
 
+}
+
+IplImage * treatment(IplImage *img)
+{
+	
+    gray_s(img);
+    //flou
+    int mat[9] = {1,1,1,1,1,1,1,1,1};
+    //elimination bruit
+    int mat2[9] = {1,1,1,1,5,1,1,1,1};
+    // elimination bruit
+    matrix(img,mat2,13);
+    //flou
+    matrix(img,mat,9);
+    median(img);  
+    binarization(img);
+
+    return img;
+
+}
+
+struct rect_char * detection(IplImage *img, int *nb_char)
+{
+  
+  return detect(img,nb_char);
+  
 }
 
 double compare(IplImage *img1, IplImage *img2)

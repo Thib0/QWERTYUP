@@ -3,7 +3,7 @@
 #include "opencv/cv.h"
 #include "opencv/highgui.h"
 
-struct rect_char * detect(IplImage *img);
+struct rect_char * detect(IplImage *img, int * nb_char);
 int detect_bloc(IplImage *img, int *bloc, int **ptr);
 int bloc_value(int x1, IplImage *img);
 int detect_line(IplImage *img, int *lines_number,int **ptrnt,int up,int low,int old_size);

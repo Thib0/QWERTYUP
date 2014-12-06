@@ -63,7 +63,16 @@ int binarization(IplImage *img)
 
 int matrix(IplImage *img,int *m_cov,int val_m_cov)
 {
-	IplImage *ref = img;
+	IplImage *ref = cvCreateImage(cvSize(img->width,img->height),8,3);
+	for(int k = 0 ; k < img->height ; k++)
+	{
+		for(int l = 0; l < img->width ; l++)
+		{
+			set_pixel(ref,k,l,get_pixel(img,l,k,0));
+		
+		}
+	
+	}
 	int value,cpt;
 	
 	for(int y = 2 ; y < img->height -2; y++)
@@ -77,15 +86,78 @@ int matrix(IplImage *img,int *m_cov,int val_m_cov)
 			{
 				for(int j = -1; j<2 ; j++)
 				{
-					value += get_pixel(ref,(x+j),(y+i),0)*m_cov[cpt];				
+					value += get_pixel(ref,(x+j),(y+i),0)*m_cov[cpt];
 					cpt++;
 				}
 			
 			}
-			value = value / val_m_cov;
-			set_pixel(img,y,x,value);
-		}	
+			set_pixel(img,y,x,value/val_m_cov);
+		}
 	}
+
+	cvReleaseImage(&ref);
 	return 0;
 
+}
+
+
+int median(IplImage *img)
+{
+
+	IplImage *save = cvCreateImage(cvSize(img->width,img->height),8,3);
+	for(int k=0 ; k < img->height ; k++)
+	{
+		for(int l = 0 ; l < img->width ; l++)
+		{
+			set_pixel(save,k,l,get_pixel(img,l,k,0));
+		
+		}
+	}
+
+
+	int l[9]={0,0,0,0,0,0,0,0,0};
+	int cpt = 0;
+	for(int x = 2 ; x < img->width -2; x++)
+	{
+		
+		for (int y =2 ; y < img->height -2; y++)
+		{	
+
+			
+			cpt = 0;
+			for (int  i = -1 ; i<2;i++)
+			{
+				for(int j = -1; j<2 ; j++)
+				{
+					l[cpt]=get_pixel(save,(x+j),(y+i),0);
+					cpt++;
+				}
+			
+			}
+			
+			set_pixel(img,y,x,median2(l,9));
+		}	
+	}
+	cvReleaseImage(&save);
+	return 0;
+
+}
+
+int median2(int *l,int size)
+{
+	for (int i = 0 ; i < size ; i++)
+	{
+		for (int j = 0 ; j < size-1 ; j++)
+		{
+			if (l[j]>l[j+1])
+			{
+				
+				int a = l[j+1];
+				l[j+1] = l[j];
+				l[j] = a;
+			}
+		
+		}
+	}
+	return l[size/2];
 }

@@ -8,4 +8,7 @@ uchar get_pixel(IplImage *img,int x,int y,int color);
 int gray_s(IplImage *img);
 int binarization(IplImage *img);
 int matrix(IplImage *img, int *m_cov, int val_m_cov);
+int median(IplImage *img);
+int median2(int *l,int size);
+
 #endif

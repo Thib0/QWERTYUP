@@ -24,7 +24,7 @@ IplImage * create_char(IplImage *img, struct rect_char chars)
 		y1++;
 	}
 
-	printf("jeajea test");
+	
 	if (chars.width != 20 || chars.height != 20 )
 	{
 		IplImage * new_result = cvCreateImage(cvSize(20,20),8,3);

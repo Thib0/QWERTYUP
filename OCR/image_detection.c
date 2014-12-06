@@ -6,7 +6,7 @@
 #include "image_detection.h"
 #include "image_treatment.h"
 
-struct rect_char * detect(IplImage *img)
+struct rect_char * detect(IplImage *img, int * nb_char)
 {
 	
 	
@@ -34,8 +34,10 @@ struct rect_char * detect(IplImage *img)
 		size_rect_char = detect_char(img,lines_number,size_lines_number,chars,ptr_rect,bloc[i],bloc[i+1],old_size_c);
 	}
 	
-	printf("nb chars : %i\n",size_rect_char);
+	//printf("nb chars : %i\n",size_rect_char);
 	color(img,size_rect_char,chars);
+
+	*nb_char = size_rect_char;
 
 	free(lines_number);
 	return chars;
@@ -46,7 +48,7 @@ struct rect_char * detect(IplImage *img)
 int detect_bloc(IplImage *img, int *bloc,int **ptr)
 {
 	int x,x1,x2,x3,nb_bloc = 0;
-	for (x=1 ; x < (img->width-1) ; x++)
+	for (x=1 ; x < (img->width-2) ; x++)
 	{
 		x1 = bloc_value(x-1,img);
 		x2 = bloc_value(x,img);
@@ -55,6 +57,9 @@ int detect_bloc(IplImage *img, int *bloc,int **ptr)
 		//printf("x1 : %i ; x2 %i , x3 %i \n",x1,x2,x3);
 		if (x2 == 0 && x1 == 1)
 		{
+			if (nb_bloc != 0)
+				bloc = realloc_l(ptr,sizeof(int)*(nb_bloc +1));
+			printf("bloc 1 : %i \n",x);
 			bloc[nb_bloc] = x;
 			nb_bloc++;
 		}
@@ -62,9 +67,9 @@ int detect_bloc(IplImage *img, int *bloc,int **ptr)
 		{
 			
 			if (nb_bloc !=0)
-				bloc = realloc_l(ptr,sizeof(int)*(nb_bloc + 2));
+				bloc = realloc_l(ptr,sizeof(int)*(nb_bloc + 1));
 			bloc[nb_bloc] = x;
-			
+			printf("bloc 2 : %i \n",x);
 			nb_bloc++;
 		}
 
@@ -94,7 +99,7 @@ int detect_line(IplImage *img, int *lines_number,int **ptr,int up ,int low,int o
 
 	int y,y0,y1,y2,size_lines_number = old_size;
 
-	for (y=1; y< (img->height);y++)
+	for (y=1; y< (img->height-1);y++)
 	{
 		y0 = line_value(img,y-1,up,low);
 		y1 = line_value(img,y,up,low);

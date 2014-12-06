@@ -23,4 +23,11 @@ IplImage* load(char* image);
 
 double compare(IplImage *img1, IplImage *img2);
 
+/*
+Make treatment to the image and make the image perfect
+*/
+IplImage * treatment(IplImage *img);
+
+struct rect_char * detection(IplImage *img, int *nb_char);
+
 #endif
