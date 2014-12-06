@@ -7,8 +7,10 @@
 #include <time.h>
 #include "image_treatment.h"
 #include "fileio.h"
+#include "image_detection.h"
 
 void learnAlphabet(neural_network *network);
+
 
 int main (int argc, char* argv[])
 
@@ -16,8 +18,9 @@ int main (int argc, char* argv[])
 
 	if (argc == 1)
 	{
-        int layerCount[3] = {20*20, 20*20*1.5, 128};
-        neural_network *network = loadNetwork();
+
+        int layerCount[4] = {20*20, 20*20*2.5, 100, 128};
+        neural_network *network = createNetwork(4,layerCount, 0.9, 0.3);
         learnAlphabet(network);
         saveNetwork(network);
         //freeNetwork(network);
@@ -86,11 +89,11 @@ double *getCharOutput(char c)
 
 void learnAlphabet(neural_network *network)
 {
-    char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwzyz1234567890";
+    char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
 
     int nb_char;
     IplImage *img = load("images/alphabet.png");
-    struct rect_char *rect_chars = detection(img, &nb_char);
+    struct rect_char *rect_chars = learning_detection(img, &nb_char);
 
 
     if (!img) {
@@ -109,17 +112,38 @@ void learnAlphabet(neural_network *network)
         output[i] = getCharOutput(*c);
     }
 
-    int num_iter = 10000;
+    int num_iter = 30000;
     int report_per_iter = 1000;
     int dataRows = 62;
 
     for (int i = 0; i < num_iter; i++) {
         int row = i % dataRows;
         runBackward(network, input[row], output[row]);
-        if (!(i % report_per_iter)) {
-            printf("iter = %i\n", i);
+        if (!(i % report_per_iter))
+        {
+            double err = evalError(network, output[row]);
+            printf("iter = %i err = %f\n", i, err);
         }
     }
+    
+    double **out = malloc(sizeof(double *) * 62);
+    
+    for (int i = 0; i < 62; i++) {
+        out[i] = malloc(sizeof(double) * 128);
+        runForward(network, input[i]);
+        for (int j = 0; j < 128; j++) {
+            out[i][j] = getOutput(network, j);
+        }
+    }
+    
+    for (int i = 0; i < 128; i++) {
+        for (int j = 0; j < 62; j++) {
+            printf("p(%c) = %c : %f ", (char)j, (char) i, out[j][i]);
+        }
+        printf("\n");
+    }
+    
+    
 /*
     for (int i = 0; i < 128; i++) {
         free(output[i]);

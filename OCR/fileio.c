@@ -20,14 +20,14 @@ double *imageArray(IplImage *img)
 char getChar(double *char_data, neural_network *network)
 {
     runForward(network, char_data);
-    int max = 33;
-    for (int i = 33; i < 128; i++)
+    int max = 0;
+    for (int i = 0; i < 128; i++)
     {
         if(getOutput(network, max) < getOutput(network, i))
             max = i;
     }
     free(char_data);
-    printf("max: %i - output: %f\n", max, getOutput(network, max));
+    printf("max: %c - output: %f\n",(char)max, getOutput(network, max));
     return (char) max;
 }
 
@@ -38,7 +38,6 @@ char *getString(struct rect_char *rect_chars, size_t size, IplImage
     for (int i = 0; i < size; i++)
     {
         chars[i] = getChar(imageArray(create_char(img, rect_chars[i])), network);
-        printf("%c",chars[i]);
     }
     
     return chars;

@@ -28,7 +28,7 @@ int detect_sect(struct rect_char *chars,int start,int end, int width_bloc, int e
 	return 0;
 
 }
-struct rect_char * learining_detection(IplImage *img,int *nb_char)
+struct rect_char * learning_detection(IplImage *img,int *nb_char)
 {
 
 	

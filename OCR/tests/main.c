@@ -26,7 +26,7 @@ void my_xor()
 
     printf("numLayers=%i\nnumDataRows=%i\nnumDataCols=%i\nnumInputs=%i\nnumOutputs=%i\n", nLayers, nDataRows, nDataCols, nInputs, nOutputs);
 
-    double beta = 5, alpha = 19, thresh = 0.0000001;
+    double beta = 0.9, alpha = 0.3, thresh = 0.0000001;
     neural_network *nn = createNetwork(nLayers, layerSize, beta, alpha);
     printf("lawl\n");
 
@@ -57,7 +57,7 @@ void my_xor()
         for(j=0; j<nOutputs; j++)
             printf("%i %f ", j, getOutput(nn, j));
     }
-
+    saveNetwork(nn);
     freeNetwork(nn);
 
     printf("Network freed.\n");
@@ -194,7 +194,7 @@ void charDetect()
 int main (int argc, char* argv[])
 {
 
-    charDetect();
+    my_xor();
     return 0;
     
     if (argc == 1)
