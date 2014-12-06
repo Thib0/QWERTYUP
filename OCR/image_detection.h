@@ -10,6 +10,7 @@ int bloc_value(int x1, IplImage *img);
 int detect_line(IplImage *img, int *lines_number,int **ptrnt,int up,int low,int old_size);
 int line_value (IplImage *img,int y,int up,int low);
 int color_line(IplImage *img, int y);
+int learning_detect_char (IplImage *img,int *lines_number,int line_numbers_size,struct rect_char *chars,struct rect_char **ptr,int up,int low,int old_size_c);
 struct rect_char
 {
     int x;
