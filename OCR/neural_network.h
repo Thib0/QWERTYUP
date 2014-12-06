@@ -2,44 +2,32 @@
 #define _NEURONAL_NETWORK_H_
 #include <stdio.h>
 #include <stdlib.h>
-#define alpha 0.35
 
-//struct neuron
-
-enum neuron_type
+struct _neural_network
 {
-    input,
-    output,
-    hidden
+    double **output;
+    double **delta;
+    double ***weight;
+    int nLayers;
+    int *layersize;
+    double beta;
+    double alpha;
+    double ***deltaweight_old;
 };
 
-struct neuron
-{
-    double input;
-    unsigned connectionsCount;
-    double *w;
-    enum neuron_type type;
-    double delta;
-};
+typedef struct _neural_network neural_network;
 
-struct neural_network
-{
-    struct neuron **neurons;
-    unsigned inputCount;
-    unsigned layerCount;
-    unsigned neuronPerLayer;
-    unsigned outputCount;
-};
+neural_network *createNetwork(unsigned nLayers, int *layersize, double beta, double alpha);
+void freeNetwork(neural_network *nn);
 
-struct neural_network *createNetwork(unsigned layerCount, unsigned inputCount,
-                                     unsigned neuronCount, unsigned outputCount);
-double *getOutput(struct neural_network *network);
-void resetWeights(struct neural_network *network);
-void freeNetwork(struct neural_network *network);
-void resetNetwork(struct neural_network *network);
-void learn(struct neural_network *network, size_t index);
-int  save(struct neural_network *network);
-struct neural_network* loadNetwork();
+void runForward(neural_network *nn, double *in);
+void runBackward(neural_network *nn, double *in, double *desired);
+double getOutput(neural_network *nn, int i);
+double evalError(neural_network *nn, double *desired);
+
+int saveNetwork(neural_network *network);
+neural_network *loadNetwork();
+
 double sigmoide(double s);
 double my_random();
 #endif

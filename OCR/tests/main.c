@@ -6,6 +6,7 @@
 #include "neural_network.h"
 #include <time.h>
 #include "image_treatment.h"
+#include "fileio.h"
 
 void my_xor()
 {
@@ -124,11 +125,10 @@ void charDetect()
     double beta = 5, alpha = 20, thresh = 0.1;
     
     
-     printf("numLayers=%i\n numDataRows=%i\n numDataCols=%i\n numInputs=%i\n numOutputs=%i\n", nLayers, nDataRows, nDataCols, nInputs, nOutputs);
+     printf(" numLayers=%i\n numDataRows=%i\n numDataCols=%i\n numInputs=%i\n numOutputs=%i\n", nLayers, nDataRows, nDataCols, nInputs, nOutputs);
     
     
     neural_network *nn = createNetwork(nLayers, layerSize, beta, alpha);
-    
     
     printf("network creted\n");
     
@@ -193,6 +193,7 @@ void charDetect()
 
 int main (int argc, char* argv[])
 {
+
     charDetect();
     return 0;
     

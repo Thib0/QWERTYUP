@@ -20,13 +20,12 @@ char getChar(double *char_data, neural_network *network)
 {
     runForward(network, char_data);
     int max = 0;
-    for (int i = 0; i < network->layersize[network->nLayers]; i++) {
+    for (int i = 0; i < network->layersize[network->nLayers-1]; i++) {
         if(getOutput(network, max) < getOutput(network, i))
             max = i;
     }
     return (char) max;
 }
-
 
 char *getString(struct rect_char *rect_chars, size_t size, IplImage
                 *img, neural_network *network)
