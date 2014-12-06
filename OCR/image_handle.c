@@ -30,14 +30,14 @@ IplImage * treatment(IplImage *img)
 {
 	
     gray_s(img);
-    //flou
-    int mat[9] = {1,1,1,1,1,1,1,1,1};
+    //contraste
+    int mat[9] = {0,-1,0,-1,5,-1,0,-1,0};
     //elimination bruit
     int mat2[9] = {1,1,1,1,5,1,1,1,1};
     // elimination bruit
     matrix(img,mat2,13);
-    //flou
-    matrix(img,mat,9);
+    //contraste
+    matrix(img,mat,1);
     median(img);  
     binarization(img);
 

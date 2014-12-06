@@ -6,6 +6,52 @@
 #include "image_detection.h"
 #include "image_treatment.h"
 
+
+int detect_sect(struct rect_char *chars,int start,int end, int width_bloc, int end_bloc)
+{
+
+	for(int i = start + 1 ;  i < end ; i++)
+	{
+		if(chars[i].y != chars[i-1].y && chars[i-1].x < end_bloc - width_bloc*0.10 )
+		{
+			chars[i].section = 1;
+			printf("section  %i\n",i);
+		}
+		else if (chars[i].y != chars[i-1].y && chars[i-1].y + chars[i-1].height*2 < chars[i].y)
+		{
+			chars[i].section = 1;
+			printf("section test 2 %i \n",i);
+		}
+	
+	}
+
+	return 0;
+
+}
+struct rect_char * learining_detection(IplImage *img,int *nb_char)
+{
+
+	
+	struct rect_char *chars = malloc(sizeof(struct rect_char));
+	int *lines_number = malloc(sizeof(int));
+	struct rect_char **ptr_rect = &chars;
+	int **ptr_line = &lines_number;
+	int size_lines_number = 0;
+	int size_rect_char = 0;
+	
+	detect_line(img,lines_number,ptr_line,0,img->width,0);
+	size_rect_char = learning_detect_char(img,lines_number,size_lines_number,chars,ptr_rect,0,img->width,0);
+	
+	*nb_char = size_rect_char;
+	free(lines_number);
+
+	return chars;
+
+
+}
+
+
+
 struct rect_char * detect(IplImage *img, int * nb_char)
 {
 	
@@ -22,19 +68,28 @@ struct rect_char * detect(IplImage *img, int * nb_char)
 	int size_rect_char = 0;
 	int old_size_l;
 	int old_size_c;
+	int cpt_bloc = 0;
 
 	for (int i = 0 ; i < nb_bloc ; i = i + 2)
 	{
+		if( i+1 < nb_bloc)
+		{
+			old_size_l = size_lines_number;
+			old_size_c = size_rect_char;
+			size_lines_number =
+				detect_line(img,lines_number,ptr_line,bloc[i],bloc[i+1],old_size_l);
 
-		old_size_l = size_lines_number;
-		old_size_c = size_rect_char;
-		size_lines_number =
-		detect_line(img,lines_number,ptr_line,bloc[i],bloc[i+1],old_size_l);
+			size_rect_char =
+			detect_char(img,lines_number,size_lines_number,chars,ptr_rect,bloc[i],bloc[i+1],old_size_c,cpt_bloc, old_size_l);
 
-		size_rect_char = detect_char(img,lines_number,size_lines_number,chars,ptr_rect,bloc[i],bloc[i+1],old_size_c);
+			cpt_bloc++;
+			detect_sect(chars,old_size_c,size_rect_char,bloc[i+1]-bloc[i],bloc[i+1]);
+		}
 	}
+
+
 	
-	//printf("nb chars : %i\n",size_rect_char);
+	printf("nb chars : %i\n",size_rect_char);
 	color(img,size_rect_char,chars);
 
 	*nb_char = size_rect_char;
@@ -146,7 +201,7 @@ int line_value (IplImage *img,int y,int up, int low)
 
 
 
-int detect_char (IplImage *img,int *lines_number,int line_numbers_size,struct rect_char *chars,struct rect_char **ptr,int up,int low,int old_size_c)
+int detect_char (IplImage *img,int *lines_number,int line_numbers_size,struct rect_char *chars,struct rect_char **ptr,int up,int low,int old_size_c,int cpt_bloc, int old_size_l)
 {
 
     // detection space 
@@ -155,8 +210,10 @@ int detect_char (IplImage *img,int *lines_number,int line_numbers_size,struct re
 
     int i,x,x1,x2,x3,mem_x1,mem_x2,c = old_size_c,white_ref;
 
-    for (i=0;i< line_numbers_size;i= i+2)
+    for (i=old_size_l;i< line_numbers_size;i= i+2)
     {
+    	if(i+1 < line_numbers_size)
+	{
         mem_x1 = -1;
         mem_x2 = -1;
         white = 0;
@@ -188,6 +245,7 @@ int detect_char (IplImage *img,int *lines_number,int line_numbers_size,struct re
                 chars[c].x = mem_x1;
                 chars[c].width = mem_x2 - mem_x1;
                 chars[c].height = lines_number[i+1] - lines_number[i];
+		chars[c].bloc = cpt_bloc;
                 c++;
 
 
@@ -199,6 +257,7 @@ int detect_char (IplImage *img,int *lines_number,int line_numbers_size,struct re
                     chars[c].x = chars[c-2].x +chars[c - 2].width +2;
                     chars[c].width = white -3;
                     chars[c].height = lines_number[i+1]-lines_number[i];
+		    chars[c].section = 0;
                     c++;
                 }
                 white =0;
@@ -223,10 +282,67 @@ int detect_char (IplImage *img,int *lines_number,int line_numbers_size,struct re
 
 
         }
+	}
     }
 
     return c;
 }
+
+int learning_detect_char (IplImage *img,int *lines_number,int line_numbers_size,struct rect_char *chars,struct rect_char **ptr,int up,int low,int old_size_c)
+{
+
+    
+
+    int i,x,x1,x2,x3,mem_x1,mem_x2,c = old_size_c,white_ref;
+
+    for (i=0;i< line_numbers_size;i= i+2)
+    {
+        mem_x1 = -1;
+        mem_x2 = -1;
+
+        for(x=up ; x < low; x++)
+        {
+
+            x1 = column_value(lines_number[i],lines_number[i+1],x-1,img);
+            x2 = column_value(lines_number[i],lines_number[i+1],x,img);
+            x3 = column_value(lines_number[i],lines_number[i+1],x+1,img);
+
+
+            if (x2 == 0 && x1 == 1)
+            {
+                mem_x2=x;
+            }
+
+            if(mem_x2 != -1 && mem_x1 != -1)
+            {
+                if (c != 0)
+                    chars = realloc_r(ptr,(c+1)*sizeof(struct rect_char));
+
+
+                chars[c].y = lines_number[i];
+                chars[c].x = mem_x1;
+                chars[c].width = mem_x2 - mem_x1;
+                chars[c].height = lines_number[i+1] - lines_number[i];
+                c++;
+
+                mem_x2 = -1;
+                mem_x1 = -1;
+            }
+
+
+
+            if (x2 == 0 && x3 == 1 )
+            {
+                mem_x1 = x;
+            }
+
+
+        }
+    }
+
+    return c;
+}
+
 
 int column_value(int y1, int y2,int x, IplImage *img)
 {
