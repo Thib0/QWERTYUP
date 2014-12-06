@@ -6,6 +6,29 @@
 #include "image_detection.h"
 #include "image_treatment.h"
 
+
+
+struct rect_char * learining_detection(IplImage *img,int *nb_char)
+{
+
+	
+	struct rect_char *chars = malloc(sizeof(struct rect_char));
+	int *lines_number = malloc(sizeof(int));
+	struct rect_char **ptr_rect = &chars;
+	int **ptr_line = &lines_number;
+	int size_lines_number = 0;
+	int size_rect_char = 0;
+	
+	detect_line(img,lines_number,ptr_line,0,img->width,0);
+	size_rect_char = detect_char(img,lines_number,size_lines_number,chars,ptr_rect,0,img->width,0);
+	
+	*nb_char = size_rect_char;
+	free(lines_number);
+
+	return chars;
+
+
+}
 struct rect_char * detect(IplImage *img, int * nb_char)
 {
 	

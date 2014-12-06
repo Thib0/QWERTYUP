@@ -85,7 +85,7 @@ int main (int argc, char* argv[])
 		{
 
 
-			//img = treatment(img);
+			img = treatment(img);
 			int *nb_char = malloc(sizeof(int));
 			struct rect_char *chars = detection(img,nb_char);
 			printf("nb char %i",*nb_char);

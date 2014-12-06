@@ -3,6 +3,7 @@
 #include "opencv/cv.h"
 #include "opencv/highgui.h"
 
+struct rect_char * learning_detection(IplImage *img, int *nb_char);
 struct rect_char * detect(IplImage *img, int * nb_char);
 int detect_bloc(IplImage *img, int *bloc, int **ptr);
 int bloc_value(int x1, IplImage *img);
