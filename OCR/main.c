@@ -20,7 +20,7 @@ int main (int argc, char* argv[])
 	{
 
         int layerCount[4] = {20*20, 20*20*2.5, 100, 128};
-        neural_network *network = createNetwork(4,layerCount, 0.9, 0.3);
+        neural_network *network = loadNetwork();
         learnAlphabet(network);
         saveNetwork(network);
         //freeNetwork(network);
@@ -46,6 +46,8 @@ int main (int argc, char* argv[])
             free(chars);
             free(str);
             return 0;
+
+
             printf("nb char %i", nb_char);
 
 			const char* window_title = "Perfect Image";
@@ -93,7 +95,7 @@ void learnAlphabet(neural_network *network)
 
     int nb_char;
     IplImage *img = load("images/alphabet.png");
-    struct rect_char *rect_chars = learning_detection(img, &nb_char);
+    struct rect_char *rect_chars = detection(img, &nb_char);
 
 
     if (!img) {
