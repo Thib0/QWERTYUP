@@ -29,6 +29,8 @@ int main (int argc, char* argv[])
 		IplImage *img = load(argv[1]);
 		if(img != NULL)
 		{
+
+
 			//img = treatment(img);
 			int nb_char;
 			struct rect_char *chars = detection(img, &nb_char);
@@ -42,11 +44,6 @@ int main (int argc, char* argv[])
             free(str);
             return 0;
             printf("nb char %i", nb_char);
-
-			img = treatment(img);
-
-            chars = detection(img, &nb_char);
-			printf("nb char %i", nb_char);
 
 			const char* window_title = "Perfect Image";
 			cvNamedWindow (window_title, CV_WINDOW_AUTOSIZE);

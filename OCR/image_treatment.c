@@ -43,7 +43,7 @@ int gray_s(IplImage *img)
 
 int binarization(IplImage *img)
 {
-	uchar bound = 120;
+	uchar bound = 100;
 	
 	for (int x = 0; x < img->width; x++)
 	{
