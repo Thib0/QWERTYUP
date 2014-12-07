@@ -7,7 +7,7 @@
 #include "image_treatment.h"
 
 
-/*int detect_sect(struct rect_char *chars,int start,int end, int width_bloc, int end_bloc)
+int detect_sect(struct rect_char *chars,int start,int end, int width_bloc, int end_bloc)
 {
 
 	for(int i = start + 1 ;  i < end ; i++)
@@ -27,7 +27,7 @@
 
 	return 0;
 
-}*/
+}
 struct rect_char * learning_detection(IplImage *img,int *nb_char)
 {
 
@@ -46,7 +46,7 @@ struct rect_char * learning_detection(IplImage *img,int *nb_char)
 	free(lines_number);
 
 
-	color(img,size_rect_char,chars);
+	//color(img,size_rect_char,chars);
 	return chars;
 
 
@@ -85,14 +85,14 @@ struct rect_char * detect(IplImage *img, int * nb_char)
 			detect_char(img,lines_number,size_lines_number,chars,ptr_rect,bloc[i],bloc[i+1],old_size_c,cpt_bloc, old_size_l);
 
 			cpt_bloc++;
-		//	detect_sect(chars,old_size_c,size_rect_char,bloc[i+1]-bloc[i],bloc[i+1]);
+			detect_sect(chars,old_size_c,size_rect_char,bloc[i+1]-bloc[i],bloc[i+1]);
 		}
 	}
 
 
 	
 	printf("nb chars : %i\n",size_rect_char);
-	color(img,size_rect_char,chars);
+	//color(img,size_rect_char,chars);
 
 	*nb_char = size_rect_char;
 
@@ -111,7 +111,7 @@ int detect_bloc(IplImage *img, int *bloc,int **ptr)
 		x2 = bloc_value(x,img);
 		x3 = bloc_value(x+1,img);
 
-		//printf("x1 : %i ; x2 %i , x3 %i \n",x1,x2,x3);
+		
 		if (x2 == 0 && x1 == 1)
 		{
 			if (nb_bloc != 0)
