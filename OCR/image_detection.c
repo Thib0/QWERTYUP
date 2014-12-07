@@ -46,7 +46,7 @@ struct rect_char * learning_detection(IplImage *img,int *nb_char)
 	free(lines_number);
 
 
-	//color(img,size_rect_char,chars);
+	color(img,size_rect_char,chars);
 	return chars;
 
 

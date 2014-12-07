@@ -8,8 +8,8 @@
 #include "image_treatment.h"
 #include "fileio.h"
 #include "image_detection.h"
-#define alpha 0.3
-#define beta 0.9
+#define ALPHA 0.3
+#define BETA 0.9
 
 void learnAlphabet(neural_network *network);
 
@@ -21,8 +21,8 @@ int main (int argc, char* argv[])
 	if (argc == 1)
 	{
 
-        int layerCount[4] = {20*20, 20*20*2.5, 100, 128};
-        neural_network *network = loadNetwork();
+        int layerCount[4] = {20*20, 20*20*2, 150, 128};
+        neural_network *network = createNetwork(4, layerCount, BETA, ALPHA);
         learnAlphabet(network);
         saveNetwork(network);
         //freeNetwork(network);
@@ -36,12 +36,13 @@ int main (int argc, char* argv[])
 		{
 
 
-			//img = treatment(img);
+			img = treatment(img);
 			int nb_char;
-			struct rect_char *chars = learning_detection(img, &nb_char);
             char path[10] = "result.bmp";
+			struct rect_char *chars = learning_detection(img, &nb_char);
+            printf("jeajea test: %i %i\n", chars[0].x, chars[nb_char-1].x);
+
             cvSaveImage(&path[0], img, NULL);
-            int nLayers[3] = {20*20, 20*20*1.5, 128};
             neural_network *network = loadNetwork();
             char *str = getString(chars, nb_char, img, network);
             printf(" ");
@@ -106,17 +107,17 @@ void learnAlphabet(neural_network *network)
 
     int nb_char;
     IplImage *img = load("images/alphabet.png");
-    struct rect_char *rect_chars = learning_detection(img, &nb_char);
+    struct rect_char *rect_chars = detection(img, &nb_char);
 
 
     if (!img) {
         printf("error loading image lawl\n");
         return;
     }
-    double **input = malloc((62 + 1)* sizeof(double *));
+    double **input = malloc((nb_char + 1)* sizeof(double *));
     input[0] = spaceImage();
 
-    for (int i = 1; i < 62 + 1; i++) {
+    for (int i = 1; i < nb_char + 1; i++) {
         input[i] = imageArray(create_char(img, rect_chars[i-1]));
     }
     double **output = malloc(sizeof(double *) * 128);
@@ -127,8 +128,8 @@ void learnAlphabet(neural_network *network)
     }
 
     int num_iter = 30000;
-    int report_per_iter = 1000;
-    int dataRows = 63;
+    int report_per_iter = 100;
+    int dataRows = nb_char + 1;
 
     for (int i = 0; i < num_iter; i++) {
         int row = i % dataRows;
@@ -137,12 +138,13 @@ void learnAlphabet(neural_network *network)
         double err = evalError(network, output[row]);
 
         if (err > 0.1)
+        {
             runBackward(network, input[row], output[row], 0);
-
-        if (!(i % report_per_iter))
+        }
+        //if (!(i % report_per_iter))
         {
             err = evalError(network, output[row]);
-            printf("iter = %i err = %f\n", i, err);
+            printf("iter = %i err = %f char = %c\n", i, err, alphabet[row]);
         }
 
     }

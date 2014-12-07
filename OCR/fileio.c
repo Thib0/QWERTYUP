@@ -34,10 +34,23 @@ char getChar(double *char_data, neural_network *network)
 char *getString(struct rect_char *rect_chars, size_t size, IplImage
                 *img, neural_network *network)
 {
-    char *chars = malloc(sizeof(char) * size);
-    for (int i = 0; i < size; i++)
+    unsigned newLineCount = 0;
+    /*for (int i = 0; i < size; i++) {
+        if (rect_chars[i].section) {
+            newLineCount++;
+        }
+    }*/
+    char *chars = malloc(sizeof(char) * (size + newLineCount));
+
+    for (int i = 0, j = 0; i < size + newLineCount; i++, j++)
     {
-        chars[i] = getChar(imageArray(create_char(img, rect_chars[i])), network);
+        //printf("%i\n", i);
+        /*if (rect_chars[j].section)
+        {
+            chars[i] = '\n';
+            i++;
+        }*/
+        chars[i] = getChar(imageArray(create_char(img, rect_chars[j])), network);
     }
     
     return chars;
