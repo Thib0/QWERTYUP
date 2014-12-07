@@ -92,7 +92,7 @@ struct rect_char * detect(IplImage *img, int * nb_char)
 
 	
 	printf("nb chars : %i\n",size_rect_char);
-	//color(img,size_rect_char,chars);
+	color(img,size_rect_char,chars);
 
 	*nb_char = size_rect_char;
 

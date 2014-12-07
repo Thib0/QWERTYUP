@@ -127,7 +127,7 @@ void runForward(neural_network *nn, double *in)
     }
 }
 
-void runBackward(neural_network *nn, double *in, double *desired)
+void runBackward(neural_network *nn, double *in, double *desired, int forward)
 {
     int nLayers = nn->nLayers;
     double **output = nn->output;
@@ -142,7 +142,9 @@ void runBackward(neural_network *nn, double *in, double *desired)
     int i;
 
     //    update output values for each neuron
-    runForward(nn, in);
+    if (forward)
+        runForward(nn, in);
+
     
     //    find delta for output layer
     for(i=0; i<layersize[nLayers-1]; i++)
@@ -240,8 +242,6 @@ neural_network *loadNetwork()
         nLayers[i] = c;
     }
     
-    printf("nLayers loaded\n");
-    
     char **layersize = calloc(atoi(nLayers), sizeof(char *));
     
     for (int i = 0; i < atoi(nLayers); i++) {
@@ -264,28 +264,19 @@ neural_network *loadNetwork()
         }
     }
     
-    printf("layersize: ");
-    
     for (int i = 0; i < atoi(nLayers); i++) {
         printf("%i ",atoi(layersize[i]));
     }
-
-    
-    printf("layersize loaded\n");
     
     char *beta = calloc(9, sizeof(char));
     for (int i = 0, c = fgetc(f); c != '\n'; c = fgetc(f), i++) {
         beta[i] = c;
     }
     
-    printf("beta loaded\n");
-    
     char *alpha = calloc(9, sizeof(char));
     for (int i = 0, c = fgetc(f); c != '\n'; c = fgetc(f), i++) {
         alpha[i] = c;
     }
-    
-    printf("alpha loaded\n");
     
     int *layersizei = malloc(sizeof(int) * atoi(nLayers));
     
@@ -293,8 +284,6 @@ neural_network *loadNetwork()
         layersizei[i] = atoi(layersize[i]);
         printf("%i ", layersizei[i]);
     }
-    
-    printf("layersize converted\n");
     
     
     fclose(f);

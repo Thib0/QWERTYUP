@@ -21,7 +21,7 @@ neural_network *createNetwork(unsigned nLayers, int *layersize, double beta, dou
 void freeNetwork(neural_network *nn);
 
 void runForward(neural_network *nn, double *in);
-void runBackward(neural_network *nn, double *in, double *desired);
+void runBackward(neural_network *nn, double *in, double *desired, int forward);
 double getOutput(neural_network *nn, int i);
 double evalError(neural_network *nn, double *desired);
 

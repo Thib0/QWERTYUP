@@ -6,7 +6,7 @@
 #include "opencv/cv.h"
 #include "opencv/highgui.h"
 #include "neural_network.h"
-
+#define tresh 0.35
 double *imageArray(IplImage *img)
 {
     double *array = malloc(sizeof(double)*20*20);
@@ -28,7 +28,7 @@ char getChar(double *char_data, neural_network *network)
     }
     free(char_data);
     printf("max: %c - output: %f\n",(char)max, getOutput(network, max));
-    return (char) max;
+    return (char) (getOutput(network, max) > tresh) ? max : '?';
 }
 
 char *getString(struct rect_char *rect_chars, size_t size, IplImage
