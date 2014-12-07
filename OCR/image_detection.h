@@ -4,7 +4,7 @@
 #include "opencv/highgui.h"
 
 
-int detect_sect(struct rect_char *chars, int start, int end, int width_bloc,int end_bloc);
+//int detect_sect(struct rect_char *chars, int start, int end, int width_bloc,int end_bloc);
 struct rect_char * learning_detection(IplImage *img, int *nb_char);
 struct rect_char * detect(IplImage *img, int * nb_char);
 int detect_bloc(IplImage *img, int *bloc, int **ptr);

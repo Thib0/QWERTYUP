@@ -7,7 +7,7 @@
 #include "image_treatment.h"
 
 
-int detect_sect(struct rect_char *chars,int start,int end, int width_bloc, int end_bloc)
+/*int detect_sect(struct rect_char *chars,int start,int end, int width_bloc, int end_bloc)
 {
 
 	for(int i = start + 1 ;  i < end ; i++)
@@ -27,7 +27,7 @@ int detect_sect(struct rect_char *chars,int start,int end, int width_bloc, int e
 
 	return 0;
 
-}
+}*/
 struct rect_char * learning_detection(IplImage *img,int *nb_char)
 {
 
@@ -39,12 +39,14 @@ struct rect_char * learning_detection(IplImage *img,int *nb_char)
 	int size_lines_number = 0;
 	int size_rect_char = 0;
 	
-	detect_line(img,lines_number,ptr_line,0,img->width,0);
+	size_lines_number = detect_line(img,lines_number,ptr_line,0,img->width,0);
 	size_rect_char = learning_detect_char(img,lines_number,size_lines_number,chars,ptr_rect,0,img->width,0);
 	
 	*nb_char = size_rect_char;
 	free(lines_number);
 
+
+	color(img,size_rect_char,chars);
 	return chars;
 
 
@@ -83,7 +85,7 @@ struct rect_char * detect(IplImage *img, int * nb_char)
 			detect_char(img,lines_number,size_lines_number,chars,ptr_rect,bloc[i],bloc[i+1],old_size_c,cpt_bloc, old_size_l);
 
 			cpt_bloc++;
-			detect_sect(chars,old_size_c,size_rect_char,bloc[i+1]-bloc[i],bloc[i+1]);
+		//	detect_sect(chars,old_size_c,size_rect_char,bloc[i+1]-bloc[i],bloc[i+1]);
 		}
 	}
 

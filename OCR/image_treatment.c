@@ -5,6 +5,7 @@
 #include "image_handle.h"
 #include "image_detection.h"
 #include "image_treatment.h"
+#include <math.h>
 
 int set_pixel(IplImage *img,int y,int x,int value)
 {
@@ -43,8 +44,8 @@ int gray_s(IplImage *img)
 
 int binarization(IplImage *img)
 {
-	uchar bound = 100;
-	
+	uchar bound = otsu_bina(img);
+
 	for (int x = 0; x < img->width; x++)
 	{
 		for(int y = 0 ; y < img->height; y++)
@@ -87,11 +88,19 @@ int matrix(IplImage *img,int *m_cov,int val_m_cov)
 				for(int j = -1; j<2 ; j++)
 				{
 					value += get_pixel(ref,(x+j),(y+i),0)*m_cov[cpt];
+						
 					cpt++;
 				}
 			
 			}
+
+			if((value/val_m_cov) > 255)
+				value = 255;
+			else if ((value /val_m_cov) < 0)
+				value = 0;
+
 			set_pixel(img,y,x,value/val_m_cov);
+			
 		}
 	}
 
@@ -160,4 +169,77 @@ int median2(int *l,int size)
 		}
 	}
 	return l[size/2];
+}
+
+
+
+int otsu_bina(IplImage *img)
+{
+
+	int x,y,i,bound;
+	int hist[256];
+
+	// INIT tab
+	for ( i = 0 ; i < 256; i++)
+		hist[i] = 0;
+
+	double max_sigma, sigma[256];
+	double prob[256], omega[256], myu[256];
+
+	
+	for( y = 0 ; y < img->height ; y++)
+	{
+		for( x = 0 ; x < img->width ; x++)
+		{
+			hist[get_pixel(img,x,y,0)] += 1;
+		}
+	
+	
+	}
+
+	for (i = 0 ; i < 256 ; i++)
+	{
+		prob[i] = (double)hist[i] / (img->width * img->height);
+	
+	}
+	
+
+	omega[0] = prob [0];
+	myu[0] = 0.0;
+
+	for( i = 1 ; i < 256 ; i++)
+	{
+		omega[i] = omega[i-1] + prob[i];
+		myu[i] = myu[i-1] + i*prob[i];
+	
+	
+	}
+
+	bound = 0;
+	max_sigma = 0.0;
+
+	for( i = 0 ; i <255 ; i++)
+	{
+		if(omega[i] != 0.0 && omega[i] != 1.0)
+		{
+			sigma[i] = pow(myu[255]*omega[i] - myu[i],2) / (omega[i]*(1.0 - omega[i]));	
+		}
+		else
+		{
+			sigma[i] = 0;
+		
+		}
+
+		if (sigma[i] > max_sigma)
+		{
+			max_sigma = sigma[i];
+			bound = i;
+		
+		}
+	
+	}
+	
+
+	return bound;
+
 }
