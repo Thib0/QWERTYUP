@@ -17,8 +17,8 @@ IplImage* load(char* image)
 
     if (img == NULL)
     {
-	    //fprintf (stderr, "couldn't open image file: %s\n", argv[1]);
-	    return NULL;
+        //fprintf (stderr, "couldn't open image file: %s\n", argv[1]);
+        return NULL;
     }
 
     return img;
@@ -27,19 +27,45 @@ IplImage* load(char* image)
 }
 
 IplImage * treatment(IplImage *img)
-{
-	
-    gray_s(img);
+{		
+    const char* window_title = "Perfect Image";
+    cvNamedWindow (window_title, CV_WINDOW_AUTOSIZE);
+    cvShowImage (window_title, img);
+    cvWaitKey(0);
+    cvDestroyAllWindows();
+    gray_s(img); 
+    cvShowImage ("Grayscale", img);
+    cvWaitKey(0);
+    cvDestroyAllWindows();
+
     //contraste
     int mat[9] = {0,-1,0,-1,5,-1,0,-1,0};
     //elimination bruit
     int mat2[9] = {1,1,1,1,5,1,1,1,1};
     // elimination bruit
     matrix(img,mat2,13);
+    cvShowImage ("Noise Elimination", img);
+    cvWaitKey(0);
+    cvDestroyAllWindows();
+
     //contraste
     matrix(img,mat,1);
+    cvShowImage ("Contraste", img);
+    cvWaitKey(0);
+    cvDestroyAllWindows();
+
+
     median(img);  
+    cvShowImage ("Median", img);
+    cvWaitKey(0);
+    cvDestroyAllWindows();
+
+
     binarization(img);
+    cvShowImage ("Binarization", img);
+    cvWaitKey(0);
+    cvDestroyAllWindows();
+
 
     return img;
 
@@ -47,9 +73,9 @@ IplImage * treatment(IplImage *img)
 
 struct rect_char * detection(IplImage *img, int *nb_char)
 {
-  
-  return detect(img,nb_char);
-  
+
+    return detect(img,nb_char);
+
 }
 
 double compare(IplImage *img1, IplImage *img2)

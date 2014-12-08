@@ -6,5 +6,7 @@
 #include "image_detection.h"
 
 IplImage * create_char(IplImage *img, struct rect_char chars);
+struct rect_char  resize_char_x(IplImage *img, struct rect_char chars);
+struct rect_char resize_char_y(IplImage *img, struct rect_char chars);
 
 #endif

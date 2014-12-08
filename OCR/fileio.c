@@ -27,32 +27,33 @@ char getChar(double *char_data, neural_network *network)
             max = i;
     }
     free(char_data);
-    printf("max: %c - output: %f\n",(char)max, getOutput(network, max));
+    //printf("max: %c - output: %f\n",(char)max, getOutput(network, max));
     return (char) (getOutput(network, max) > tresh) ? max : '?';
 }
 
 char *getString(struct rect_char *rect_chars, size_t size, IplImage
-                *img, neural_network *network)
+        *img, neural_network *network)
 {
     unsigned newLineCount = 0;
     /*for (int i = 0; i < size; i++) {
-        if (rect_chars[i].section) {
-            newLineCount++;
-        }
-    }*/
+      if (rect_chars[i].section) {
+      newLineCount++;
+      }
+      }*/
     char *chars = malloc(sizeof(char) * (size + newLineCount));
 
-    for (int i = 0, j = 0; i < size + newLineCount; i++, j++)
+    for (unsigned i = 0, j = 0; i < size + newLineCount; i++, j++)
     {
         //printf("%i\n", i);
         /*if (rect_chars[j].section)
-        {
-            chars[i] = '\n';
-            i++;
-        }*/
-        chars[i] = getChar(imageArray(create_char(img, rect_chars[j])), network);
+          {
+          chars[i] = '\n';
+          i++;
+          }*/
+        chars[i] = getChar(imageArray(create_char(img, rect_chars[j])),
+                network);
     }
-    
+
     return chars;
 }
 
@@ -61,9 +62,9 @@ int saveToFile(char *string, char *fileName)
     FILE *f = fopen(fileName, "w+");
     if (!f)
         return 0;
-    
+
     fprintf(f, "%s", string);
-    
+
     fclose(f);
     return 1;
 }

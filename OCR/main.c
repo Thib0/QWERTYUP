@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <gtk/gtk.h>
+#include <stdlib.h>
 #include "opencv/highgui.h"
 #include "opencv/cv.h"
 #include "image_handle.h"
@@ -8,154 +8,72 @@
 #include "image_treatment.h"
 #include "fileio.h"
 #include "image_detection.h"
-#include "string.h"
 #define ALPHA 0.3
 #define BETA 0.9
 
-/* Declaration of vars*/
-GtkWidget *window = NULL;
-GtkBuilder *builder = NULL;
-GError *error = NULL;
-gchar *filename = NULL;
-GtkImage *srcImgBox = NULL;
-GtkEntry *pathTextBox = NULL;
-GtkTextView *outputBox = NULL;
-
 void learnAlphabet(neural_network *network);
 
-char *alphabet =
-    " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
-unsigned count = 0;
+char *alphabet = 
+" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
 
-G_MODULE_EXPORT void load_image()
-{
-	const gchar* text = gtk_entry_get_text(pathTextBox);
-	gtk_image_set_from_file(srcImgBox, text);
-    count = 0;
-}
-
-G_MODULE_EXPORT void button1_clicked()
-{
-	printf("Test 1 \n");
-    // traitements d'image
-    char *path = (char *)gtk_entry_get_text(pathTextBox);
-    char imgPath[7] = "tmp.bmp";
-
-    IplImage *img = !count ? load(path) : load(imgPath);
-
-    if (!img) {
-        printf("error loading image\n");
-        return;
-    }
-    /*int mat[9];
-    if (count == 1)
-         mat[9] = {1, 1, 1, 1, 5, 1, 1, 1, 1};
-    else if (count == 2)
-         mat[9] = {0, -1, 0, -1, 5, -1, 0, -1, 0};
-    switch (count)
-    {
-        case 0:
-            gray_s(img);
-            break;
-        case 1:
-            //mat = {1, 1, 1, 1, 5, 1, 1, 1, 1};
-            matrix(img,mat,13);
-            break;
-        case 2:
-            //mat = {0, -1, 0, -1, 5, -1, 0, -1, 0};
-            matrix(img,mat,1);
-            break;
-        case 3:
-            median(img);
-            break;
-        case 4:
-            binarization(img);
-            break;
-    }
-
-    count++;*/
-    img = treatment(img);
-    cvSaveImage(imgPath, img, NULL);
-
-}
-
-G_MODULE_EXPORT void button2_clicked()
-{
-	printf("Test 2 \n");
-    // reseau neuron + text etc
-    char *imgpath = (char *)gtk_entry_get_text(pathTextBox);
-    IplImage *img = load(imgpath);
-
-    if (!img) {
-        printf("Error loading image\n");
-        return;
-    }
-    load_image();
-    img = treatment(img);
-    int nb_char;
-    char path[10] = "result.bmp";
-    struct rect_char *chars = learning_detection(img, &nb_char);
-
-    cvSaveImage(&path[0], img, NULL);
-    neural_network *network = loadNetwork();
-    char *str = getString(chars, nb_char, img, network);
-    // set str to Box
-    GtkTextBuffer *buffer = gtk_text_buffer_new (gtk_text_tag_table_new ());
-
-    gtk_text_view_set_buffer(outputBox, buffer);
-    gtk_text_buffer_set_text (buffer, str,strlen(str));
-
-    saveToFile(str, "text");
-    freeNetwork(network);
-    free(chars);
-    free(str);
-}
-
-int main(int argc, char *argv[])
+int main (int argc, char* argv[])
 {
 
-/*GTK Initialisation */
-gtk_init(&argc, &argv);
+	if (argc == 1)
+	{
 
-/* Builder Initialisation */
-builder = gtk_builder_new();
+        int layerCount[4] = {20*20, 20*20*2, 150, 128};
+        neural_network *network = createNetwork(4, layerCount,BETA, ALPHA);
+        learnAlphabet(network);
+        //saveNetwork(network);
+        //freeNetwork(network);
+        _Exit(0);
+	}
 
-/*Giving XML file path */
-filename =  g_build_filename ("QCR.glade", NULL);
-
-/*Loading XML file*/
-gtk_builder_add_from_file (builder, filename, &error); 
-g_free (filename);
-
-/*Error handle*/
-    if (error)
-    {
-        gint code = error->code;
-        g_printerr("%s\n", error->message);
-        g_error_free (error);
-        return code;
-    }
-
-    /*Loading main window*/
-    window = GTK_WIDGET(gtk_builder_get_object(builder, "QCR"));
-    srcImgBox = GTK_IMAGE(gtk_builder_get_object(builder, "src"));
-    pathTextBox = GTK_ENTRY(gtk_builder_get_object(builder, "text"));
-    outputBox = GTK_TEXT_VIEW(gtk_builder_get_object(builder, "textview"));
+	else if (argc == 2)
+	{
+		IplImage *img = load(argv[1]);
+		if(img != NULL)
+		{
 
 
-    /*Callback connect*/
-    gtk_builder_connect_signals (builder, NULL);
+            img = treatment(img);
+            int nb_char;
+            char path[11] = "result.bmp";
+            struct rect_char *chars = learning_detection(img, &nb_char);
+            //printf("jeajea test: %i %i\n", chars[0].x, chars[nb_char-1].x);
 
-    /*Show window*/
-    gtk_widget_show_all (window);
-    g_object_unref (G_OBJECT (builder));
+            cvSaveImage(&path[0], img, NULL);
+            cvShowImage ("Chars detection", img);
+            cvWaitKey(0);
+            cvDestroyAllWindows();
 
-    /*Run GTK*/
-    gtk_main();
-
+            neural_network *network = loadNetwork();
+            char *str = getString(chars, nb_char, img, network);
+            printf(" ");
+            printf("%s%s\n","\x1B[31m", str);
+            printf("%s", "\x1B[37m");
+            printf("%s\n", alphabet);
+            saveToFile(str, "Result OCR");
+            freeNetwork(network);
+            free(chars);
+            free(str);
+            cvReleaseImage(&img);
+            return 0;
+		}
+		else
+		{
+			printf("Error loading image.\n");
+			return -1;
+		}
+	}
+	else
+	{
+		printf("Argument issue. Exiting...\n");
+		return -1;
+	}
     return 0;
 }
-
 
 
 double *getCharOutput(char c)
@@ -164,7 +82,7 @@ double *getCharOutput(char c)
     for (int i = 0; i < c; i++) {
         charArray[i] = 0;
     }
-    charArray[c] = 1;
+    charArray[(int)c] = 1;
     for (int i = c + 1; i < 128; i++) {
         charArray[i] = 0;
     }
@@ -203,7 +121,7 @@ void learnAlphabet(neural_network *network)
         output[i] = getCharOutput(*c);
     }
 
-    int num_iter = 30000;
+    int num_iter = 5000;
     int report_per_iter = 100;
     int dataRows = nb_char + 1;
 
@@ -222,10 +140,22 @@ void learnAlphabet(neural_network *network)
             err = evalError(network, output[row]);
             printf("iter = %i err = %f char = %c\n", i, err, alphabet[row]);
         }
-        
+
     }
-    
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -17,7 +17,8 @@ struct _neural_network
 
 typedef struct _neural_network neural_network;
 
-neural_network *createNetwork(unsigned nLayers, int *layersize, double beta, double alpha);
+neural_network *createNetwork(unsigned nLayers, int *layersize, double beta, 
+        double alpha);
 void freeNetwork(neural_network *nn);
 
 void runForward(neural_network *nn, double *in);
