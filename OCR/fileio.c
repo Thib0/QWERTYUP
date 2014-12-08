@@ -6,7 +6,7 @@
 #include "opencv/cv.h"
 #include "opencv/highgui.h"
 #include "neural_network.h"
-#define tresh 0.35
+#define tresh 0.07
 double *imageArray(IplImage *img)
 {
     double *array = malloc(sizeof(double)*20*20);
